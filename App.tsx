@@ -1,20 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { AppRegistry, View } from 'react-native';
+import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+import { name as appName } from './app.json';
+import App from './src/App';
 
-export default function App() {
+const darktheme = {
+  ...DefaultTheme,
+  dark: true,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#FF3434',
+    background: '#121212',
+    card: '#212121',
+    text: '#FFFFFF',
+    border: '#000000',
+    notification: '#FFC107',
+  },
+  View: {
+    ...DefaultTheme.colors,
+    backgroundColor: '#131313',
+    color: '#FFFFFF',
+  }
+};
+
+export default function Main() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+      <PaperProvider theme={darktheme}>
+        <App />
+      </PaperProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+AppRegistry.registerComponent(appName, () => Main);
