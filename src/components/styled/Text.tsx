@@ -10,16 +10,17 @@ interface TextWithThemeProps extends TextProps {
     style?: any;
     children?: any;
     variant?: VariantProp<any>;
+    type?: 'error' | 'success' | 'warning' | 'info' | 'default';
 }
 
-const TextWithTheme = ({ theme, children, style, variant, ...props }: TextWithThemeProps) => {
+const TextWithTheme = ({ theme, children, style, variant, type, ...props }: TextWithThemeProps) => {
     const { colors } = theme;
 
     return (
         <Text 
             style={{
                 ...style,
-                color: colors.text,
+                color: type ? colors[type] : colors.text,
             }}
             variant={variant}
         >

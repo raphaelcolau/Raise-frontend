@@ -7,7 +7,8 @@ import Text from '../../components/styled/Text';
 import Button from '../../components/styled/Button';
 import Chip from '../../components/styled/Chip';
 import StyledTextInput from '../../components/styled/TextInput';
-import { GENDER } from '../../components/type/types';
+import { GENDER, SignUpPropsRes } from '../../components/type/types';
+import { postSignUp } from '../../services/post_signup';
 
 export default function Register({ navigation }: { navigation: any}) {
     const theme = useTheme();
@@ -16,6 +17,9 @@ export default function Register({ navigation }: { navigation: any}) {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [gender, setGender] = React.useState<GENDER>(GENDER.NOT_SPECIFIED);
+    const [error, setError] = React.useState<string | null>(null);
+    const [inputError, setInputError] = React.useState<string | null>(null);
+    const regexEmail = new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$');
 
     const styles = StyleSheet.create({
         container: {
@@ -54,20 +58,50 @@ export default function Register({ navigation }: { navigation: any}) {
     }
 
     const validForm = () => {
-        console.log({ username, password })
+        if (username === '') {
+            setError('Le nom d\'utilisateur est obligatoire');
+            setInputError('username');
+            return;
+        } else if (email === '') {
+            setError('L\'e-mail est obligatoire');
+            setInputError('email');
+            return;
+        } else if (email !== '' && !regexEmail.test(email)) {
+            setError('L\'e-mail n\'est pas valide');
+            setInputError('email');
+            return;
+        } else if (password !== '' && password.length < 8) {
+            setError('Le mot de passe doit contenir au moins 8 caractères');
+            setInputError('password');
+            return;
+        } else {
+            setError(null);
+            setInputError(null);
+            postSignUp({
+                username,
+                email,
+                password,
+                gender,
+            }).then((res) => {
+                const data = res.data as SignUpPropsRes;
+                if (data.success) {
+                    navigation.navigate('Login');
+                } else {
+                    setError(data.message);
+                }
+            })
+        }
     }
     
     return (
         <View style={styles.container}>
-            
-            <View id="Logo" style={styles.logo}>
-                <Image style={styles.imageLogo} source={require('../../assets/images/logo.png')} />
-            </View>
 
             <View>
                 <Text variant="displaySmall" style={styles.bold}>Bienvenue!</Text>
                 <Text variant="bodyLarge" style={styles.subtitle}>Dites-nous qui vous êtes avant de commencer</Text>
             </View>
+
+            {error ? <Text type="error">{error}</Text> : null}
 
             <View>
                 <Text variant="titleSmall" style={styles.bold}>Vous êtes</Text>
@@ -109,12 +143,14 @@ export default function Register({ navigation }: { navigation: any}) {
                     label="Nom d'utilisateur"
                     placeholder="Entrez votre nom d'utilisateur"
                     autoComplete='username'
+                    error={inputError === 'username'}
                     onChangeText={(text) => setUsername(text)}
                 />
                 <StyledTextInput 
                     label="E-mail"
                     placeholder="Entrez votre e-mail"
                     autoComplete='email'
+                    error={inputError === 'email'}
                     onChangeText={(text) => setEmail(text)}
                 />
 
@@ -122,6 +158,7 @@ export default function Register({ navigation }: { navigation: any}) {
                     label="Mot de passe"
                     placeholder="Entrez votre mot de passe"
                     autoComplete='password'
+                    error={inputError === 'password'}
                     secureTextEntry={secureText}
                     onChangeText={(text) => setPassword(text)}
                     right={<TextInput.Icon icon={secureText ? "eye" : "eye-off"} onPress={() => handleSecureText()} />}

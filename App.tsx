@@ -13,6 +13,7 @@ const darktheme = {
     background: '#121212',
     card: '#242424',
     text: '#FFFFFF',
+    error: '#CF6679',
     border: '#000000',
     notification: '#FFC107',
   },

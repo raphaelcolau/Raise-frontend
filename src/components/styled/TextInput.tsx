@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 import { withTheme } from "react-native-paper";
 import { TextInputProps } from "react-native-paper";
 import { TextInput } from "react-native-paper";
