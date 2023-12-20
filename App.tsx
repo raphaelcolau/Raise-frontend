@@ -11,16 +11,17 @@ const darktheme = {
     ...DefaultTheme.colors,
     primary: '#FF3434',
     background: '#121212',
-    card: '#212121',
+    card: '#242424',
     text: '#FFFFFF',
     border: '#000000',
     notification: '#FFC107',
   },
-  View: {
+  view: {
     ...DefaultTheme.colors,
     backgroundColor: '#131313',
     color: '#FFFFFF',
   }
+
 };
 
 export default function Main() {

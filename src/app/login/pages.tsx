@@ -8,17 +8,40 @@ import Text from '../../components/styled/Text';
 
 export default function Login() {
     const theme = useTheme();
+
+    const styles = StyleSheet.create({
+        container: {
+            display: 'flex',
+            gap: 30,
+            padding: 24,
+            height: '100%',
+        },
+        logo: {
+            width: '100%',
+            height: '20%',
+            display: 'flex',
+            justifyContent: 'center',
+        },
+        title: {
+            fontWeight: 'bold',
+        },
+        subtitle: {
+            fontWeight: 'normal',
+            fontSize: 14,
+            opacity: 0.7,
+        }
+    });
     
     return (
         <View style={styles.container}>
             
-            <View>
+            <View id="Logo" style={styles.logo}>
                 <Text variant="displayLarge">Raise</Text>
             </View>
 
             <View>
-                <Text variant="displaySmall">Vous revoilà!</Text>
-                <Text variant="bodyLarge">Entrez votre nom d'utilisateur et mot de passe</Text>
+                <Text variant="displaySmall" style={styles.title}>Vous revoilà!</Text>
+                <Text variant="bodyLarge" style={styles.subtitle}>Entrez votre nom d'utilisateur et mot de passe</Text>
             </View>
 
 
@@ -49,12 +72,3 @@ export default function Login() {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        gap: 10,
-        padding: 24,
-        height: '100%',
-    }
-});

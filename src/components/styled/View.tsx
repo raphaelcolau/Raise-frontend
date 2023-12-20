@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { withTheme } from "react-native-paper";
 import { WithThemeProps } from "../type/types";
 
-const ViewWithTheme = ({ theme, children, style }: WithThemeProps) => {
+const ViewWithTheme = ({ theme, children, style, ...props }: WithThemeProps) => {
     const { colors } = theme;
 
     return (
@@ -12,6 +12,7 @@ const ViewWithTheme = ({ theme, children, style }: WithThemeProps) => {
                 ...style,
                 backgroundColor: colors.background,
             }}
+            {...props}
         >
             {children}
         </View>
