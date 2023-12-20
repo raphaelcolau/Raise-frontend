@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, StatusBar, StatusBarStyle } from 'react-native';
 import { Provider as PaperProvider, MD3DarkTheme } from 'react-native-paper';
 import { name as appName } from './app.json';
 import App from './src/App';
@@ -21,12 +21,14 @@ const darktheme = {
     backgroundColor: '#131313',
     color: '#FFFFFF',
   }
-
 };
 
 export default function Main() {
+  const barStyle: StatusBarStyle = 'light-content';
+
   return (
       <PaperProvider theme={darktheme}>
+        <StatusBar barStyle={barStyle} backgroundColor={darktheme.colors.background} />
         <App />
       </PaperProvider>
   );
