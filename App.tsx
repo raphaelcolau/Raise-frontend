@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { AppRegistry, View } from 'react-native';
-import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+import { AppRegistry } from 'react-native';
+import { Provider as PaperProvider, MD3DarkTheme } from 'react-native-paper';
 import { name as appName } from './app.json';
 import App from './src/App';
 
 const darktheme = {
-  ...DefaultTheme,
+  ...MD3DarkTheme,
   dark: true,
   colors: {
-    ...DefaultTheme.colors,
+    ...MD3DarkTheme.colors,
     primary: '#FF3434',
     background: '#121212',
     card: '#242424',
@@ -17,7 +17,7 @@ const darktheme = {
     notification: '#FFC107',
   },
   view: {
-    ...DefaultTheme.colors,
+    ...MD3DarkTheme.colors,
     backgroundColor: '#131313',
     color: '#FFFFFF',
   }
