@@ -1,13 +1,18 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { StyleSheet, Image } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { useTheme } from '@react-navigation/native';
 import View from '../../components/styled/View';
 import Text from '../../components/styled/Text';
+import Button from '../../components/styled/Button';
+import StyledTextInput from '../../components/styled/TextInput';
 
 
-export default function Login() {
+export default function Login({ navigation }: { navigation: any}) {
     const theme = useTheme();
+    const [secureText, setSecureText] = React.useState(true);
+    const [username, setUsername] = React.useState('');
+    const [password, setPassword] = React.useState('');
 
     const styles = StyleSheet.create({
         container: {
@@ -22,6 +27,10 @@ export default function Login() {
             display: 'flex',
             justifyContent: 'center',
         },
+        imageLogo: {
+            width: 135,
+            height: 52,
+        },
         title: {
             fontWeight: 'bold',
         },
@@ -29,14 +38,31 @@ export default function Login() {
             fontWeight: 'normal',
             fontSize: 14,
             opacity: 0.7,
-        }
+        },
+        formInput: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 22,
+        },
+        unableToConnect: {
+            textAlign: 'right',
+            textDecorationLine: 'underline',
+        },
     });
+
+    const handleSecureText = () => {
+        setSecureText(!secureText);
+    }
+
+    const validForm = () => {
+        console.log({ username, password })
+    }
     
     return (
         <View style={styles.container}>
             
             <View id="Logo" style={styles.logo}>
-                <Text variant="displayLarge">Raise</Text>
+                <Image style={styles.imageLogo} source={require('../../assets/images/logo.png')} />
             </View>
 
             <View>
@@ -45,30 +71,34 @@ export default function Login() {
             </View>
 
 
-            <View>
-                <TextInput 
+            <View style={styles.formInput}>
+                <StyledTextInput 
                     label="Nom d'utilisateur"
                     placeholder="Entrez votre nom d'utilisateur"
-                    mode="outlined"
                     autoComplete='username'
+                    onChangeText={(text) => setUsername(text)}
                 />
-                <TextInput 
+                <StyledTextInput 
                     label="Mot de passe"
                     placeholder="Entrez votre mot de passe"
-                    mode="outlined"
                     autoComplete='password'
-                    secureTextEntry={true}
+                    secureTextEntry={secureText}
+                    onChangeText={(text) => setPassword(text)}
+                    right={<TextInput.Icon icon={secureText ? "eye" : "eye-off"} onPress={() => handleSecureText()} />}
                 />
-                <Text variant="bodySmall">Je n'arrive pas à me connecter</Text>
+                <Text style={styles.unableToConnect} variant="bodySmall">Je n'arrive pas à me connecter</Text>
             </View>
 
             <View>
-                <Button mode="contained" onPress={() => console.log('Pressed')}>
+                <Button onPress={() => validForm()}>
                     Se connecter
                 </Button>
             </View>
 
-            <Text>Ou créer un compte</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <Text>Ou </Text>
+                <Text style={{ textDecorationLine: 'underline', fontWeight: "bold" }} onPress={() => navigation.navigate('Login')} >créer un compte</Text>
+            </View>
         </View>
     )
 }
