@@ -4,3 +4,9 @@ export interface WithThemeProps {
     style?: any;
     id?: string;
 }
+
+export enum GENDER {
+    MAN,
+    WOMAN,
+    NOT_SPECIFIED
+}
