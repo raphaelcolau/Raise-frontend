@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useTheme } from '@react-navigation/native';
 import View from '../../components/styled/View';
@@ -97,7 +97,13 @@ export default function Register({ navigation }: { navigation: any}) {
 
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <Text>Ou </Text>
-                <Text style={{ textDecorationLine: 'underline', fontWeight: "bold" }} onPress={() => navigation.navigate('Register')} >se connecter</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                    <Text 
+                        style={{ textDecorationLine: 'underline', fontWeight: "bold" }}
+                    >
+                        se connecter
+                    </Text>
+                </TouchableOpacity>
             </View>
         </View>
     )
