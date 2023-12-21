@@ -11,6 +11,7 @@ const darktheme = {
     ...MD3DarkTheme.colors,
     primary: '#FF3434',
     background: '#101010',
+    onBackground: '#FFFFFF',
     card: '#242424',
     surface: '#242424',
     onSurface: '#DFDFDF',
