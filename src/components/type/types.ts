@@ -11,6 +11,16 @@ export enum GENDER {
     NOT_SPECIFIED
 }
 
+export enum DAYS {
+    MONDAY = 'MONDAY',
+    TUESDAY = 'TUESDAY',
+    WEDNESDAY = 'WEDNESDAY',
+    THURSDAY = 'THURSDAY',
+    FRIDAY = 'FRIDAY',
+    SATURDAY = 'SATURDAY',
+    SUNDAY = 'SUNDAY'
+}
+
 export type User = {
     username: string;
     role: Array<string>;
@@ -53,4 +63,22 @@ export type SignInPropsRes = {
         tokenType: string;
         refreshToken: string;
     };
+}
+
+export type ActivityProps = {
+    id: number;
+    createdBy: number;
+    lastUpdatedBy: number;
+    createdOn: string;
+    lastUpdatedOn: string;
+    isActive: boolean;
+    name: string;
+    sportPreset: string | null;
+    trainingDays: Array<DAYS>;
+    description: string;
+    hasWarmUp: boolean;
+    hasStretching: boolean;
+    trainingStatus: 'PLANNED' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED';
+    iconName: string;
+    iconHexadecimalColor: string;
 }
