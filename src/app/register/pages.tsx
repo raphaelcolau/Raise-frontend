@@ -87,7 +87,7 @@ export default function Register({ navigation }: { navigation: any}) {
                 if (data.success) {
                     navigation.navigate('Login');
                 } else {
-                    setError(data.message);
+                    setError(String(data.message));
                 }
             })
         }
