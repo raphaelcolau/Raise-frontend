@@ -10,18 +10,13 @@ const darktheme = {
   colors: {
     ...MD3DarkTheme.colors,
     primary: '#FF3434',
-    background: '#121212',
+    background: '#101010',
     card: '#242424',
     text: '#FFFFFF',
     error: '#CF6679',
     border: '#000000',
     notification: '#FFC107',
   },
-  view: {
-    ...MD3DarkTheme.colors,
-    backgroundColor: '#131313',
-    color: '#FFFFFF',
-  }
 };
 
 export default function Main() {
