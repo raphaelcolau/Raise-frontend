@@ -12,6 +12,8 @@ const darktheme = {
     primary: '#FF3434',
     background: '#101010',
     card: '#242424',
+    surface: '#242424',
+    onSurface: '#DFDFDF',
     text: '#FFFFFF',
     error: '#CF6679',
     border: '#000000',
