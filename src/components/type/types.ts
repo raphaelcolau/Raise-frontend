@@ -11,6 +11,13 @@ export enum GENDER {
     NOT_SPECIFIED
 }
 
+export type User = {
+    username: string;
+    role: Array<string>;
+    email: string;
+    id: number;
+};
+
 export interface SignUpForm {
     username: string;
     password: string;
@@ -37,7 +44,7 @@ export interface SignInForm {
 export type SignInPropsRes = {
     success: boolean;
     message: string;
-    data: {
+    data?: {
         id: number;
         username: string;
         email: string;

@@ -7,6 +7,7 @@ import Text from '../../components/styled/Text';
 import Button from '../../components/styled/Button';
 import StyledTextInput from '../../components/styled/TextInput';
 import { postSignIn } from '../../services/signin';
+import { SignInPropsRes } from '../../components/type/types';
 
 
 export default function Login({ navigation }: { navigation: any}) {
@@ -70,7 +71,12 @@ export default function Login({ navigation }: { navigation: any}) {
             setError(null);
             setInputError(null);
             postSignIn({username, password}).then((res) => {
-                console.log(res);
+                const data: SignInPropsRes = res;
+                if (data.success) {
+                    navigation.navigate('Home');
+                } else {
+                    setError(String(data.message));
+                }
             });
         
         }

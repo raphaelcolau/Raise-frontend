@@ -12,13 +12,20 @@ export const postSignUp = async (form: SignUpForm) => {
             const axiosError = error as AxiosError;
             const response = axiosError.response;
 
-            if (response) {
+            if (response && response.status === 409) {
                 console.log(response.data);
-
                 return {
                     data: {
                         success: false,
                         message: response.data
+                    }
+                };
+            } else if (response) {
+                console.log(response.data);
+                return {
+                    data: {
+                        success: false,
+                        message: (response.data as any).message
                     }
                 };
             }
