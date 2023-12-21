@@ -6,6 +6,7 @@ import View from '../../components/styled/View';
 import Text from '../../components/styled/Text';
 import Button from '../../components/styled/Button';
 import StyledTextInput from '../../components/styled/TextInput';
+import { postSignIn } from '../../services/signin';
 
 
 export default function Login({ navigation }: { navigation: any}) {
@@ -13,6 +14,8 @@ export default function Login({ navigation }: { navigation: any}) {
     const [secureText, setSecureText] = React.useState(true);
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [error, setError] = React.useState<string | null>(null);
+    const [inputError, setInputError] = React.useState<string | null>(null);
 
     const styles = StyleSheet.create({
         container: {
@@ -55,7 +58,22 @@ export default function Login({ navigation }: { navigation: any}) {
     }
 
     const validForm = () => {
-        console.log({ username, password })
+        if (username === '') {
+            setInputError('username');
+            setError('Veuillez saisir votre nom d\'utilisateur');
+            return;
+        } else if (password === '') {
+            setInputError('password');
+            setError('Veuillez saisir votre mot de passe');
+            return;
+        } else {
+            setError(null);
+            setInputError(null);
+            postSignIn({username, password}).then((res) => {
+                console.log(res);
+            });
+        
+        }
     }
     
     return (
@@ -70,12 +88,14 @@ export default function Login({ navigation }: { navigation: any}) {
                 <Text variant="bodyLarge" style={styles.subtitle}>Entrez votre nom d'utilisateur et mot de passe</Text>
             </View>
 
+            {error ? <Text type="error">{error}</Text> : null}
 
             <View style={styles.formInput}>
                 <StyledTextInput 
                     label="Nom d'utilisateur"
                     placeholder="Entrez votre nom d'utilisateur"
                     autoComplete='username'
+                    error={inputError === 'username'}
                     onChangeText={(text) => setUsername(text)}
                 />
                 <StyledTextInput 
@@ -83,6 +103,7 @@ export default function Login({ navigation }: { navigation: any}) {
                     placeholder="Entrez votre mot de passe"
                     autoComplete='password'
                     secureTextEntry={secureText}
+                    error={inputError === 'password'}
                     onChangeText={(text) => setPassword(text)}
                     right={<TextInput.Icon icon={secureText ? "eye" : "eye-off"} onPress={() => handleSecureText()} />}
                 />

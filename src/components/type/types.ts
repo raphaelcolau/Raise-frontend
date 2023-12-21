@@ -28,3 +28,22 @@ export type SignUpPropsRes = {
         gender: GENDER;
     };
 }
+
+export interface SignInForm {
+    username: string;
+    password: string;
+}
+
+export type SignInPropsRes = {
+    success: boolean;
+    message: string;
+    data: {
+        id: number;
+        username: string;
+        email: string;
+        roles: Array<string>;
+        accessToken: string;
+        tokenType: string;
+        refreshToken: string;
+    };
+}
