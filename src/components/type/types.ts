@@ -69,8 +69,8 @@ export type ActivityProps = {
     id: number;
     createdBy: number;
     lastUpdatedBy: number;
-    createdOn: string;
-    lastUpdatedOn: string;
+    createdOn: Date;
+    lastUpdatedOn: Date;
     isActive: boolean;
     name: string;
     sportPreset: string | null;
