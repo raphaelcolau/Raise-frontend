@@ -3,6 +3,7 @@ import { AppRegistry, StatusBar, StatusBarStyle } from 'react-native';
 import { Provider as PaperProvider, MD3DarkTheme } from 'react-native-paper';
 import { name as appName } from './app.json';
 import App from './src/App';
+import { interceptor } from './src/services/interceptor';
 
 const darktheme = {
   ...MD3DarkTheme,
@@ -21,6 +22,8 @@ const darktheme = {
     notification: '#FFC107',
   },
 };
+
+interceptor();
 
 export default function Main() {
   const barStyle: StatusBarStyle = 'light-content';
