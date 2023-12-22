@@ -8,7 +8,7 @@ import Button from '../../components/styled/Button';
 import Chip from '../../components/styled/Chip';
 import StyledTextInput from '../../components/styled/TextInput';
 import { GENDER, SignUpPropsRes } from '../../components/type/types';
-import { postSignUp } from '../../services/signup';
+import { postSignUp } from '../../adapters/signup';
 
 export default function Register({ navigation }: { navigation: any}) {
     const theme = useTheme();

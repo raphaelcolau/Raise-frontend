@@ -6,7 +6,7 @@ import Text from '../../components/styled/Text';
 import { StyleSheet } from 'react-native';
 import { Button, Chip, Icon, Surface, useTheme } from 'react-native-paper';
 import { ActivityProps, DAYS } from '../../components/type/types';
-import { getUserTrainings } from '../../services/userTrainings';
+import { getUserTrainings } from '../../adapters/userTrainings';
 
 
 function Activity({activity}: {activity: ActivityProps}) {

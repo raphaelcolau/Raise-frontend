@@ -6,9 +6,11 @@ import View from '../../components/styled/View';
 import Text from '../../components/styled/Text';
 import Button from '../../components/styled/Button';
 import StyledTextInput from '../../components/styled/TextInput';
-import { postSignIn } from '../../services/signin';
+import { postSignIn } from '../../adapters/signin';
 import { SignInPropsRes } from '../../components/type/types';
-
+import { useDispatch } from 'react-redux';
+import { setToken } from '../../store/slice/authSlice';
+import { setIsAuthenticated } from '../../store/slice/authSlice';
 
 export default function Login({ navigation }: { navigation: any}) {
     const theme = useTheme();
@@ -17,6 +19,7 @@ export default function Login({ navigation }: { navigation: any}) {
     const [password, setPassword] = React.useState('');
     const [error, setError] = React.useState<string | null>(null);
     const [inputError, setInputError] = React.useState<string | null>(null);
+    const dispatch = useDispatch();
 
     const styles = StyleSheet.create({
         container: {
@@ -73,6 +76,8 @@ export default function Login({ navigation }: { navigation: any}) {
             postSignIn({username, password}).then((res) => {
                 const data: SignInPropsRes = res;
                 if (data.success) {
+                    dispatch(setToken(String(data.data?.refreshToken)));
+                    dispatch(setIsAuthenticated(true));
                     navigation.navigate('Home');
                 } else {
                     setError(String(data.message));
