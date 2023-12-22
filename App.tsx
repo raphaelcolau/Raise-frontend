@@ -2,8 +2,10 @@ import * as React from 'react';
 import { AppRegistry, StatusBar, StatusBarStyle } from 'react-native';
 import { Provider as PaperProvider, MD3DarkTheme } from 'react-native-paper';
 import { name as appName } from './app.json';
-import App from './src/App';
-import { interceptor } from './src/services/interceptor';
+import Router from './src/Router';
+import { interceptor } from './src/adapters/interceptor';
+import { Provider } from 'react-redux';
+import store from './src/store/store';
 
 const darktheme = {
   ...MD3DarkTheme,
@@ -29,10 +31,12 @@ export default function Main() {
   const barStyle: StatusBarStyle = 'light-content';
 
   return (
+    <Provider store={store}>
       <PaperProvider theme={darktheme}>
         <StatusBar barStyle={barStyle} backgroundColor={darktheme.colors.background} />
-        <App />
+        <Router />
       </PaperProvider>
+    </Provider>
   );
 }
 
