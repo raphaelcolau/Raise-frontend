@@ -78,6 +78,8 @@ export default function Login({ navigation }: { navigation: any}) {
                 if (data.success) {
                     dispatch(setToken(String(data.data?.refreshToken)));
                     dispatch(setIsAuthenticated(true));
+                    setUsername('');
+                    setPassword('');
                     navigation.navigate('Home');
                 } else {
                     setError(String(data.message));
