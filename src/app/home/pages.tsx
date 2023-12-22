@@ -73,7 +73,7 @@ function DayProgram() {
                 mode="text"
                 theme={{ colors: { primary: theme.colors.onBackground } }}
             >
-                Ajouter une activité
+                Programmer des séances
             </Button>
 
         </StyledView>
@@ -97,9 +97,6 @@ export default function Home({navigation, route}: {navigation: any, route: any})
             <Header />
             <WeeklyCalendar />
             <DayProgram />
-            <Button mode="contained" onPress={() => navigation.navigate('Login')}>
-                Login
-            </Button>
         </StyledView>
     )
 }
