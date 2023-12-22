@@ -76,10 +76,15 @@ export default function Login({ navigation }: { navigation: any}) {
             postSignIn({username, password}).then((res) => {
                 const data: SignInPropsRes = res;
                 if (data.success) {
-                    dispatch(setToken(String(data.data?.refreshToken)));
-                    dispatch(setIsAuthenticated(true));
+
                     setUsername('');
                     setPassword('');
+                    setError(null);
+                    setInputError(null);
+                    setSecureText(true);
+
+                    dispatch(setToken(String(data.data?.refreshToken)));
+                    dispatch(setIsAuthenticated(true));
                     navigation.navigate('Home');
                 } else {
                     setError(String(data.message));
@@ -109,6 +114,7 @@ export default function Login({ navigation }: { navigation: any}) {
                     placeholder="Entrez votre nom d'utilisateur"
                     autoComplete='username'
                     error={inputError === 'username'}
+                    value={username}
                     onChangeText={(text) => setUsername(text)}
                 />
                 <StyledTextInput 
@@ -117,6 +123,7 @@ export default function Login({ navigation }: { navigation: any}) {
                     autoComplete='password'
                     secureTextEntry={secureText}
                     error={inputError === 'password'}
+                    value={password}
                     onChangeText={(text) => setPassword(text)}
                     right={<TextInput.Icon icon={secureText ? "eye" : "eye-off"} onPress={() => handleSecureText()} />}
                 />
