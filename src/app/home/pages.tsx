@@ -16,7 +16,7 @@ function Activity({activity}: {activity: ActivityProps}) {
             backgroundColor: theme.colors.surface,
             borderRadius: 15,
             width: '100%',
-            padding: 14,
+            padding: 10,
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -26,8 +26,13 @@ function Activity({activity}: {activity: ActivityProps}) {
 
     return (
         <Surface style={styles.Surface} elevation={0}>
+            
             <Text variant="bodyLarge" style={{textTransform: 'capitalize'}}>{activity.name}</Text>
-            <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#1B9820' closeIcon="check-circle" >Réalisé</Chip>
+
+            {activity.trainingStatus === 'FINISHED' ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#1B9820' onClose={() => {}} closeIcon="check-circle" >Réalisé</Chip> : null}
+            {activity.trainingStatus === 'CANCELLED' ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#D14E4E' onClose={() => {}} closeIcon="close-circle-outline" >Annulé</Chip> : null}
+            {activity.trainingStatus === 'IN_PROGRESS' ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#FF7A00' onClose={() => {}} closeIcon="loading" >En cours</Chip> : null}
+        
         </Surface>
     )
 }
@@ -43,7 +48,7 @@ function DayProgram() {
             createdOn: new Date(),
             lastUpdatedOn: new Date(),
             isActive: true,
-            name: 'haut du corps',
+            name: 'Kung Fu',
             description: 'description',
             sportPreset: null,
             trainingDays: [
@@ -54,7 +59,64 @@ function DayProgram() {
             trainingStatus: 'FINISHED',
             iconName: "temp",
             iconHexadecimalColor: "#FFFFFF",
-        }
+        },
+        {
+            id: 2,
+            createdBy: 1,
+            lastUpdatedBy: 1,
+            createdOn: new Date(),
+            lastUpdatedOn: new Date(),
+            isActive: true,
+            name: 'bas du corps',
+            description: 'description',
+            sportPreset: null,
+            trainingDays: [
+                DAYS.FRIDAY,
+            ],
+            hasWarmUp: false,
+            hasStretching: false,
+            trainingStatus: 'CANCELLED',
+            iconName: "temp",
+            iconHexadecimalColor: "#FFFFFF",
+        },
+        {
+            id: 3,
+            createdBy: 1,
+            lastUpdatedBy: 1,
+            createdOn: new Date(),
+            lastUpdatedOn: new Date(),
+            isActive: true,
+            name: 'haut du corps',
+            description: 'description',
+            sportPreset: null,
+            trainingDays: [
+                DAYS.FRIDAY,
+            ],
+            hasWarmUp: false,
+            hasStretching: false,
+            trainingStatus: 'IN_PROGRESS',
+            iconName: "temp",
+            iconHexadecimalColor: "#FFFFFF",
+        },
+        {
+            id: 4,
+            createdBy: 1,
+            lastUpdatedBy: 1,
+            createdOn: new Date(),
+            lastUpdatedOn: new Date(),
+            isActive: true,
+            name: 'cardio',
+            description: 'description',
+            sportPreset: null,
+            trainingDays: [
+                DAYS.FRIDAY,
+            ],
+            hasWarmUp: false,
+            hasStretching: false,
+            trainingStatus: 'PLANNED',
+            iconName: "temp",
+            iconHexadecimalColor: "#FFFFFF",
+        },
     ];
 
     const styles = StyleSheet.create({
