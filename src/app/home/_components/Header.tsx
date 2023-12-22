@@ -1,7 +1,9 @@
-import { Avatar, IconButton, withTheme } from 'react-native-paper';
+import { Avatar, IconButton, withTheme, TouchableRipple } from 'react-native-paper';
 import View from '../../../components/styled/View';
 import { Image } from 'react-native';
 import * as Updates from 'expo-updates';
+import * as SecureStore from 'expo-secure-store';
+
 
 export default function Header() {
     const styles = {
@@ -29,7 +31,14 @@ export default function Header() {
         <View style={styles.container}>
             <StyledIconButton icon="dots-horizontal" onPress={reloadExpo} />
             <Image style={styles.imageLogo} source={require('../../../assets/images/logo.png')} />
-            <Avatar.Image size={37} source={{ uri: 'https://i.pravatar.cc/300' }} />
+            <TouchableRipple onPress={() => {
+                SecureStore.deleteItemAsync('refreshToken');
+                SecureStore.deleteItemAsync('accessToken').then(() => {
+                    Updates.reloadAsync();
+                });
+            }}>
+                <Avatar.Image size={37} source={{ uri: 'https://i.pravatar.cc/300' }} />
+            </TouchableRipple>
         </View>
     )
 }
