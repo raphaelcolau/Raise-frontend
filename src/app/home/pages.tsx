@@ -6,6 +6,7 @@ import Text from '../../components/styled/Text';
 import { StyleSheet } from 'react-native';
 import { Button, Chip, Icon, Surface, useTheme } from 'react-native-paper';
 import { ActivityProps, DAYS } from '../../components/type/types';
+import { getUserTrainings } from '../../services/userTrainings';
 
 
 function Activity({activity}: {activity: ActivityProps}) {
@@ -40,90 +41,20 @@ function Activity({activity}: {activity: ActivityProps}) {
 function DayProgram() {
     const theme = useTheme();
 
-    const activityList: ActivityProps[] = [
-        {
-            id: 1,
-            createdBy: 1,
-            lastUpdatedBy: 1,
-            createdOn: new Date(),
-            lastUpdatedOn: new Date(),
-            isActive: true,
-            name: 'Kung Fu',
-            description: 'description',
-            sportPreset: null,
-            trainingDays: [
-                DAYS.FRIDAY,
-            ],
-            hasWarmUp: false,
-            hasStretching: false,
-            trainingStatus: 'FINISHED',
-            iconName: "temp",
-            iconHexadecimalColor: "#FFFFFF",
-        },
-        {
-            id: 2,
-            createdBy: 1,
-            lastUpdatedBy: 1,
-            createdOn: new Date(),
-            lastUpdatedOn: new Date(),
-            isActive: true,
-            name: 'bas du corps',
-            description: 'description',
-            sportPreset: null,
-            trainingDays: [
-                DAYS.FRIDAY,
-            ],
-            hasWarmUp: false,
-            hasStretching: false,
-            trainingStatus: 'CANCELLED',
-            iconName: "temp",
-            iconHexadecimalColor: "#FFFFFF",
-        },
-        {
-            id: 3,
-            createdBy: 1,
-            lastUpdatedBy: 1,
-            createdOn: new Date(),
-            lastUpdatedOn: new Date(),
-            isActive: true,
-            name: 'haut du corps',
-            description: 'description',
-            sportPreset: null,
-            trainingDays: [
-                DAYS.FRIDAY,
-            ],
-            hasWarmUp: false,
-            hasStretching: false,
-            trainingStatus: 'IN_PROGRESS',
-            iconName: "temp",
-            iconHexadecimalColor: "#FFFFFF",
-        },
-        {
-            id: 4,
-            createdBy: 1,
-            lastUpdatedBy: 1,
-            createdOn: new Date(),
-            lastUpdatedOn: new Date(),
-            isActive: true,
-            name: 'cardio',
-            description: 'description',
-            sportPreset: null,
-            trainingDays: [
-                DAYS.FRIDAY,
-            ],
-            hasWarmUp: false,
-            hasStretching: false,
-            trainingStatus: 'PLANNED',
-            iconName: "temp",
-            iconHexadecimalColor: "#FFFFFF",
-        },
-    ];
+    const [activityList, setActivityList] = React.useState([]);
+
+
+    React.useEffect(() => {
+        getUserTrainings().then((trainings) => {
+            setActivityList(trainings);
+        });
+    }, []);
 
     const styles = StyleSheet.create({
         container: {
             position: 'relative',
             width: '100%',
-            maxHeight: 330,
+            // maxHeight: 330,
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
@@ -140,7 +71,6 @@ function DayProgram() {
             <Button
                 icon='plus'
                 mode="text"
-                onPress={() => console.log('Pressed')}
                 theme={{ colors: { primary: theme.colors.onBackground } }}
             >
                 Ajouter une activité
@@ -167,9 +97,9 @@ export default function Home({navigation, route}: {navigation: any, route: any})
             <Header />
             <WeeklyCalendar />
             <DayProgram />
-            {/* <Button mode="contained" onPress={() => navigation.navigate('Login')}>
+            <Button mode="contained" onPress={() => navigation.navigate('Login')}>
                 Login
-            </Button> */}
+            </Button>
         </StyledView>
     )
 }
