@@ -5,8 +5,9 @@ import WeeklyCalendar from './_components/WeeklyCalendar';
 import Text from '../../components/styled/Text';
 import { StyleSheet, View } from 'react-native';
 import { Button, Chip, Icon, Surface, useTheme } from 'react-native-paper';
-import { ActivityProps, DAYS } from '../../components/type/types';
+import { ActivityProps } from '../../components/type/types';
 import { getUserTrainings } from '../../adapters/userTrainings';
+import BottomBar from '../../components/bottomBar/bottomBar';
 
 
 function Activity({activity}: {activity: ActivityProps}) {
@@ -42,10 +43,13 @@ function Activity({activity}: {activity: ActivityProps}) {
         <Surface style={styles.Surface} elevation={0}>
             
             <View style={styles.Left}>
+
                 {isShorted ? <Icon source={activity.iconName} size={36} color={activity.iconHexadecimalColor} /> : null}
+
                 <View style={styles.Informations}>
                     <Text variant="bodyLarge" style={{textTransform: 'capitalize'}}>{activity.name}</Text>
                 </View>
+
             </View>
 
 
@@ -101,6 +105,7 @@ function DayProgram() {
 }
 
 
+
 export default function Home({navigation, route}: {navigation: any, route: any}) {
     
     const styles = {
@@ -116,6 +121,7 @@ export default function Home({navigation, route}: {navigation: any, route: any})
             <Header />
             <WeeklyCalendar />
             <DayProgram />
+            <BottomBar />
         </StyledView>
     )
 }
