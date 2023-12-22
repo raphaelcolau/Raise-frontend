@@ -17,8 +17,8 @@ export default function Router() {
                     headerShown: false,
                 }}
             >
-                {isAuthenticated ? false : <Stack.Screen name="Login" component={Login} />}
-                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="Login" component={Login} />
+                {isAuthenticated ? <Stack.Screen name="Home" component={Home} /> : null}
                 <Stack.Screen name="Register" component={Register} />
             </Stack.Navigator>
         </NavigationContainer>
