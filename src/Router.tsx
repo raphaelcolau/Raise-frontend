@@ -4,8 +4,10 @@ import Home from "./app/home/pages";
 import Login from "./app/login/pages";
 import Register from "./app/register/pages";
 import { useSelector } from 'react-redux';
+import * as React from 'react';
 
 const Stack = createNativeStackNavigator();
+
 
 export default function Router() {
     const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated);
