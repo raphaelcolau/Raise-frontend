@@ -75,7 +75,7 @@ export type ActivityProps = {
     name: string;
     sportPreset: string | null;
     trainingDays: Array<DAYS>;
-    description: string;
+    description: string | null;
     hasWarmUp: boolean;
     hasStretching: boolean;
     trainingStatus: 'PLANNED' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED';

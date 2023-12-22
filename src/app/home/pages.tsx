@@ -3,7 +3,7 @@ import StyledView from '../../components/styled/View';
 import Header from './_components/Header';
 import WeeklyCalendar from './_components/WeeklyCalendar';
 import Text from '../../components/styled/Text';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Button, Chip, Icon, Surface, useTheme } from 'react-native-paper';
 import { ActivityProps, DAYS } from '../../components/type/types';
 import { getUserTrainings } from '../../adapters/userTrainings';
@@ -11,6 +11,7 @@ import { getUserTrainings } from '../../adapters/userTrainings';
 
 function Activity({activity}: {activity: ActivityProps}) {
     const theme = useTheme();
+    const isShorted = (activity.trainingStatus === 'IN_PROGRESS' || activity.trainingStatus === 'PLANNED' ? true : false)
 
     const styles = StyleSheet.create({
         Surface: {
@@ -22,13 +23,31 @@ function Activity({activity}: {activity: ActivityProps}) {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
+        },
+        Left: {
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: isShorted ? 'center' : 'flex-start',
+            gap: 10,
+        },
+        Informations: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            gap: 5,
         }
     });
 
     return (
         <Surface style={styles.Surface} elevation={0}>
             
-            <Text variant="bodyLarge" style={{textTransform: 'capitalize'}}>{activity.name}</Text>
+            <View style={styles.Left}>
+                {isShorted ? <Icon source={activity.iconName} size={36} color={activity.iconHexadecimalColor} /> : null}
+                <View style={styles.Informations}>
+                    <Text variant="bodyLarge" style={{textTransform: 'capitalize'}}>{activity.name}</Text>
+                </View>
+            </View>
+
 
             {activity.trainingStatus === 'FINISHED' ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#1B9820' onClose={() => {}} closeIcon="check-circle" >Réalisé</Chip> : null}
             {activity.trainingStatus === 'CANCELLED' ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#D14E4E' onClose={() => {}} closeIcon="close-circle-outline" >Annulé</Chip> : null}
