@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+# API
+src/adapters/api.ts
+
 # Expo
 .expo/
 dist/
