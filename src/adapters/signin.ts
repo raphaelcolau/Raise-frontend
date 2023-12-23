@@ -8,6 +8,7 @@ export const postSignIn = async (form: SignInForm) => {
         const response = await axios.post(`${API_URL}/api/auth/signin`, form);
         const data: SignInPropsRes = response.data;
 
+
         if (data.success) {
             await SecureStore.setItemAsync("accessToken", data.data?.accessToken ?? "");
             await SecureStore.setItemAsync("refreshToken", data.data?.refreshToken ?? "");
@@ -18,6 +19,7 @@ export const postSignIn = async (form: SignInForm) => {
         if (axios.isAxiosError(error)) {
             const axiosError = error as AxiosError;
             const response = axiosError.response;
+
 
             if (response) {
                 return {
@@ -30,6 +32,6 @@ export const postSignIn = async (form: SignInForm) => {
 
     return {
         success: false,
-        message: "Error"
+        message: "Unknown error"
     };
 }
