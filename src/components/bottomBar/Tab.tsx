@@ -21,7 +21,7 @@ export const Tab = ({name, title, icon, selected}: {name: string, title: string,
         <TouchableOpacity onPress={() => {}}>
             <View style={styles.container}>
                 <Icon source={icon} size={35} color={color} />
-                <Text variant="titleMedium" style={{color: color}}>{title}</Text>
+                <Text variant="titleMedium" style={{color: color, fontFamily: 'sans-serif-light'}}>{title}</Text>
             </View>
         </TouchableOpacity>
     )
