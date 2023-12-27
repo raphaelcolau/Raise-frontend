@@ -15,7 +15,7 @@ export default function Week({week}: {week: number}) {
         },
     });
     const dispatch = useDispatch();
-    const daySelected = new Date(useSelector((state: any) => state).currentDay.day);
+    const daySelected = new Date(useSelector((state: any) => state.currentDay.day));
 
     return (
         <View>
