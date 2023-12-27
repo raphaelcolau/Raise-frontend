@@ -1,18 +1,21 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import StyledView from '../../components/styled/View';
 import Header from './_components/Header';
 import WeeklyCalendar from './_components/WeeklyCalendar';
 import Text from '../../components/styled/Text';
 import { StyleSheet, View } from 'react-native';
 import { Button, Chip, Icon, Surface, useTheme } from 'react-native-paper';
-import { ActivityProps } from '../../components/type/types';
+import { Training, TRAINING_STATUS } from '../../components/type/types';
 import { getUserTrainings } from '../../adapters/userTrainings';
 import BottomBar from '../../components/bottomBar/bottomBar';
+import { useSelector } from 'react-redux';
+import { act } from '@react-three/fiber';
 
 
-function Activity({activity}: {activity: ActivityProps}) {
+function Activity({activity}: {activity: Training}) {
     const theme = useTheme();
-    const isShorted = (activity.trainingStatus === 'IN_PROGRESS' || activity.trainingStatus === 'PLANNED' ? true : false)
+    const isShorted = ( (activity.trainingStatus === TRAINING_STATUS.PERFORMED || activity.trainingStatus === TRAINING_STATUS.CANCELLED || activity.trainingStatus === null) ? true : false)
+
 
     const styles = StyleSheet.create({
         Surface: {
@@ -35,7 +38,10 @@ function Activity({activity}: {activity: ActivityProps}) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
-            gap: 5,
+            gap: 1,
+        },
+        Subtiles: {
+            fontFamily: 'sans-serif-light',
         }
     });
 
@@ -44,18 +50,19 @@ function Activity({activity}: {activity: ActivityProps}) {
             
             <View style={styles.Left}>
 
-                {isShorted ? <Icon source={activity.iconName} size={36} color={activity.iconHexadecimalColor} /> : null}
+                {isShorted ? <Icon source={activity.trainingIconName.replace('icon_', '')} size={36} color={activity.trainingIconHexadecimalColor} /> : null}
 
                 <View style={styles.Informations}>
-                    <Text variant="bodyLarge" style={{textTransform: 'capitalize'}}>{activity.name}</Text>
+                    <Text variant="bodyLarge" style={{textTransform: 'capitalize'}}>{activity.trainingName}</Text>
+                    <Text variant="bodyMedium" style={styles.Subtiles}>{activity.numberOfExercise} {activity.numberOfExercise > 1 ? 'exercices' : 'exercice'}</Text>
                 </View>
 
             </View>
 
 
-            {activity.trainingStatus === 'FINISHED' ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#1B9820' onClose={() => {}} closeIcon="check-circle" >Réalisé</Chip> : null}
-            {activity.trainingStatus === 'CANCELLED' ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#D14E4E' onClose={() => {}} closeIcon="close-circle-outline" >Annulé</Chip> : null}
-            {activity.trainingStatus === 'IN_PROGRESS' ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#FF7A00' onClose={() => {}} closeIcon="loading" >En cours</Chip> : null}
+            {activity.trainingStatus === TRAINING_STATUS.PERFORMED ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#1B9820' onClose={() => {}} closeIcon="check-circle" >Réalisé</Chip> : null}
+            {activity.trainingStatus === TRAINING_STATUS.CANCELLED ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#D14E4E' onClose={() => {}} closeIcon="close-circle-outline" >Annulé</Chip> : null}
+            {activity.trainingStatus === TRAINING_STATUS.IN_PROGRESS ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#FF7A00' onClose={() => {}} closeIcon="loading" >En cours</Chip> : null}
         
         </Surface>
     )
@@ -65,13 +72,14 @@ function DayProgram() {
     const theme = useTheme();
 
     const [activityList, setActivityList] = React.useState([]);
+    const currentDay: string = useSelector((state: any) => state.currentDay.day);
 
-
-    React.useEffect(() => {
-        getUserTrainings().then((trainings) => {
+    useEffect(() => {
+        getUserTrainings(new Date(currentDay)).then((trainings) => {
             setActivityList(trainings);
         });
-    }, []);
+    }, [currentDay]);
+
 
     const styles = StyleSheet.create({
         container: {
@@ -89,7 +97,7 @@ function DayProgram() {
         <StyledView style={styles.container}>
             <Text variant="titleMedium">Au programme aujourd'hui</Text>
             
-            {activityList.map((activity: ActivityProps) => (<Activity key={activity.id} activity={activity} />))}
+            {activityList.map((activity: Training) => (<Activity key={activity.trainingId} activity={activity} />))}
 
             <Button
                 icon='plus'
