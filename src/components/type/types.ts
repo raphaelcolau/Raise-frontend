@@ -21,6 +21,12 @@ export enum DAYS {
     SUNDAY = 'SUNDAY'
 }
 
+export enum TRAINING_STATUS {
+    CANCELLED,
+    IN_PROGRESS,
+    PERFORMED,
+}
+
 export type User = {
     username: string;
     role: Array<string>;
@@ -65,20 +71,17 @@ export type SignInPropsRes = {
     };
 }
 
-export type ActivityProps = {
-    id: number;
-    createdBy: number;
-    lastUpdatedBy: number;
-    createdOn: Date;
-    lastUpdatedOn: Date;
-    isActive: boolean;
-    name: string;
-    sportPreset: string | null;
+export type Training = {
+    numberOfExercise: number;
     trainingDays: Array<DAYS>;
-    description: string | null;
-    hasWarmUp: boolean;
-    hasStretching: boolean;
-    trainingStatus: 'PLANNED' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED';
-    iconName: string;
-    iconHexadecimalColor: string;
-}
+    trainingExercises: Array<{
+        exerciseId: number;
+        exerciseName: string;
+        series: Array<any>;
+    }>;
+    trainingIconHexadecimalColor: string;
+    trainingIconName: string;
+    trainingId: number;
+    trainingName: string;
+    trainingStatus: null | TRAINING_STATUS;
+};
