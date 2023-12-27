@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Day from './Day';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentDay } from '../../../store/slice/currentDaySlice';
 
-export default function Week({week, daySelected, setSelectedDay}: {week: number, daySelected?: Date, setSelectedDay: Function}) {
+export default function Week({week}: {week: number}) {
     const dayOfTheWeek = new Date().getDay() - 1;
     const styles = StyleSheet.create({
         dateContainer: {
@@ -12,6 +14,8 @@ export default function Week({week, daySelected, setSelectedDay}: {week: number,
             justifyContent: 'space-between',
         },
     });
+    const dispatch = useDispatch();
+    const daySelected = new Date(useSelector((state: any) => state).currentDay.day);
 
     return (
         <View>
@@ -19,7 +23,9 @@ export default function Week({week, daySelected, setSelectedDay}: {week: number,
                 {[0, 1, 2, 3, 4, 5, 6].map((index) => (
                     <TouchableOpacity
                         key={index}
-                        onPress={() => setSelectedDay(new Date(new Date().setDate(new Date().getDate() + (index - dayOfTheWeek) - (-week * 7))))}
+                        onPress={() => dispatch(
+                            setCurrentDay( String(new Date(new Date().setDate(new Date().getDate() + (index - dayOfTheWeek) - (-week * 7)))) )
+                            )}
                     >
                         <Day
                             selected={daySelected?.getDate() === new Date(new Date().setDate(new Date().getDate() + (index - dayOfTheWeek) - (-week * 7))).getDate()}
