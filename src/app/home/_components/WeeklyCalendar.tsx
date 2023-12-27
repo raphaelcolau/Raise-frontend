@@ -3,14 +3,14 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import { IconButton, Surface, useTheme } from 'react-native-paper';
 import StyledText from '../../../components/styled/Text';
 import Week from './Week';
+import { useSelector } from 'react-redux';
 
 export default function WeeklyCalendar() {
     const theme = useTheme();
-    const weekContainerWidth = 344;
     const flatListRef = React.useRef(null);
     const [scrollIndex, setScrollIndex] = React.useState(2);
-    const [selectedDay, setSelectedDay] = React.useState(new Date());
     const [displayedMonthAndYear, setDisplayedMonthAndYear] = React.useState(currentMonthAndYear());
+    const currentDay: string = useSelector((state: any) => state.currentDay.day);
 
     const styles = StyleSheet.create({
         container: {
@@ -52,7 +52,7 @@ export default function WeeklyCalendar() {
     });
 
     function currentMonthAndYear(): string {
-        const date = selectedDay;
+        const date = new Date(currentDay);
         const month = date.toLocaleString('fr-FR', { month: 'long' });
         const year = date.getFullYear();
 
@@ -70,7 +70,7 @@ export default function WeeklyCalendar() {
 
     React.useEffect(() => {
         setDisplayedMonthAndYear(currentMonthAndYear());
-    }, [selectedDay]);
+    }, [currentDay]);
 
     const handleScroll = (event: any) => {
         const newScrollIndex = Math.round(event.nativeEvent.contentOffset.x / 344);
@@ -110,7 +110,7 @@ export default function WeeklyCalendar() {
                     data={[0, 1, 2, 3]}
                     ref={flatListRef}
                     keyExtractor={(item) => item.toString()}
-                    renderItem={({item}) => <Week week={item} setSelectedDay={setSelectedDay} daySelected={selectedDay} />}
+                    renderItem={({item}) => <Week week={item} />}
                     // initialScrollIndex={2}
                     onScroll={handleScroll}
                     scrollEventThrottle={16}
