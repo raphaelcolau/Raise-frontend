@@ -1,9 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { API_URL } from "./api";
 
-export async function getUserTrainings() {
+export async function getUserTrainings(selectedDay: Date) {
     try {
-        const response = await axios.get(`${API_URL}/api/training/current-user`);
+        const response = await axios.get(`${API_URL}/api/training/validate-training-day/${selectedDay.toISOString()}`);
         const data = response.data;
 
         if (data.success) {
