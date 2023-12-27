@@ -6,17 +6,24 @@ import { Button, useTheme } from 'react-native-paper';
 import { Training } from '../../../components/type/types';
 import { getUserTrainings } from '../../../adapters/userTrainings';
 import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateTrainings } from '../../../store/slice/trainingsSlice';
 import Activity from './Training';
 
 export default function DayProgram() {
     const theme = useTheme();
 
+    const dispatch = useDispatch();
     const [activityList, setActivityList] = React.useState([]);
     const currentDay: string = useSelector((state: any) => state.currentDay.day);
+    const savedTrainings = useSelector((state: any) => state.trainings.saved);
+    const toSave = {...savedTrainings};
 
     useEffect(() => {
         getUserTrainings(new Date(currentDay)).then((trainings) => {
             setActivityList(trainings);
+            toSave[new Date(currentDay).toLocaleDateString()] = trainings;
+            dispatch(updateTrainings(toSave));
         });
     }, [currentDay]);
 
