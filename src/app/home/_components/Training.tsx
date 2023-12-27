@@ -1,61 +1,56 @@
 import React from 'react';
-import Text from '../../../components/styled/Text';
-import { StyleSheet, View } from 'react-native';
-import { Chip, Icon, Surface, useTheme } from 'react-native-paper';
-import { Training, TRAINING_STATUS } from '../../../components/type/types';
+import { StyleSheet, TouchableHighlight , View } from 'react-native';
+import {  Surface, useTheme, Modal, Portal } from 'react-native-paper';
+import { Training } from '../../../components/type/types';
+import BasicContent from './modal/TrainingSesseionDetails/BasicContent';
+import ModalHeader from './modal/TrainingSesseionDetails/ModalHeader';
+import ModalFooter from './modal/TrainingSesseionDetails/ModalFooter';
+import ModalContent from './modal/TrainingSesseionDetails/ModalContent';
 
 export default function Activity({activity}: {activity: Training}) {
     const theme = useTheme();
-    const isShorted = ( (activity.trainingStatus === TRAINING_STATUS.PERFORMED || activity.trainingStatus === TRAINING_STATUS.CANCELLED || activity.trainingStatus === null) ? true : false)
+    const [isVisible, setIsVisible] = React.useState(false);
 
-
-    const styles = StyleSheet.create({
-        Surface: {
+    const modalStyles = StyleSheet.create({
+        Modal: {
             backgroundColor: theme.colors.surface,
             borderRadius: 15,
             width: '100%',
             padding: 10,
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             justifyContent: 'space-between',
             alignItems: 'center',
+            gap: 15,
         },
-        Left: {
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: isShorted ? 'center' : 'flex-start',
-            gap: 10,
+        ModalContainer: {
+            paddingLeft: 15,
+            paddingRight: 15,
         },
-        Informations: {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            gap: 1,
-        },
-        Subtiles: {
-            fontFamily: 'sans-serif-light',
-        }
     });
 
     return (
-        <Surface style={styles.Surface} elevation={0}>
-            
-            <View style={styles.Left}>
+        <View>
 
-                {isShorted ? <Icon source={activity.trainingIconName.replace('icon_', '')} size={36} color={activity.trainingIconHexadecimalColor} /> : null}
+        <Portal>
+            <Modal 
+                visible={isVisible}
+                onDismiss={() => setIsVisible(false)}
+                contentContainerStyle={modalStyles.ModalContainer}
+                theme={{ colors: { backdrop: '#000000B9'}}}
+            >
+                <Surface elevation={0} style={modalStyles.Modal}>
+                    <ModalHeader activity={activity} setIsVisible={setIsVisible}/>
+                    <ModalContent activity={activity} />
+                    <ModalFooter />
+                </Surface>
+            </Modal>
+        </Portal>
 
-                <View style={styles.Informations}>
-                    <Text variant="bodyLarge" style={{textTransform: 'capitalize'}}>{activity.trainingName}</Text>
-                    <Text variant="bodyMedium" style={styles.Subtiles}>{activity.numberOfExercise} {activity.numberOfExercise > 1 ? 'exercices' : 'exercice'}</Text>
-                </View>
+        <TouchableHighlight  onPress={() => setIsVisible(true)}>
+            <BasicContent activity={activity} />
+        </TouchableHighlight >
 
-            </View>
-
-
-            {activity.trainingStatus === TRAINING_STATUS.PERFORMED ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#1B9820' onClose={() => {}} closeIcon="check-circle" >Réalisé</Chip> : null}
-            {activity.trainingStatus === TRAINING_STATUS.CANCELLED ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#D14E4E' onClose={() => {}} closeIcon="close-circle-outline" >Annulé</Chip> : null}
-            {activity.trainingStatus === TRAINING_STATUS.IN_PROGRESS ? <Chip mode="outlined" style={{borderColor: theme.colors.surface}} selectedColor='#FF7A00' onClose={() => {}} closeIcon="loading" >En cours</Chip> : null}
-        
-        </Surface>
+        </View>
     )
 }

@@ -21,7 +21,7 @@ const ButtonWithTheme = ({ theme, style, ...props }: ButtonWithThemeProps) => {
             style={styles}
             {...props}
             mode="contained"
-            textColor="white"
+            textColor="black"
         >
             {props.children}
         </Button>

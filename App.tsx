@@ -19,9 +19,10 @@ const darktheme = {
     surface: '#242424',
     onSurface: '#DFDFDF',
     text: '#FFFFFF',
-    error: '#CF6679',
+    error: '#D14E4E',
     border: '#000000',
     notification: '#FFC107',
+    tertiary: '#1B9820',
   },
 };
 

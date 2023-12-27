@@ -11,6 +11,12 @@ export enum GENDER {
     NOT_SPECIFIED
 }
 
+export enum EXERCISE_STATUS {
+    NOT_STARTED,
+    STARTED,
+    COMPLETED
+}
+
 export enum DAYS {
     MONDAY = 'MONDAY',
     TUESDAY = 'TUESDAY',
@@ -72,16 +78,29 @@ export type SignInPropsRes = {
 }
 
 export type Training = {
+    day: any;
     numberOfExercise: number;
     trainingDays: Array<DAYS>;
-    trainingExercises: Array<{
-        exerciseId: number;
-        exerciseName: string;
-        series: Array<any>;
-    }>;
+    trainingExercises: Array<Exercise>;
     trainingIconHexadecimalColor: string;
     trainingIconName: string;
     trainingId: number;
     trainingName: string;
     trainingStatus: null | TRAINING_STATUS;
 };
+
+export type Exercise = {
+    exerciseId: number;
+    exerciseName: string;
+    exerciseState: EXERCISE_STATUS
+    series: Array<Series>;
+};
+
+export type Series = {
+    completed: boolean;
+    id: number;
+    positionIndex: number;
+    repsCount: number;
+    restTime: string;
+    weight: number;
+}
