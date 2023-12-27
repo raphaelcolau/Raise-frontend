@@ -15,8 +15,8 @@ import { setIsAuthenticated } from '../../store/slice/authSlice';
 export default function Login({ navigation }: { navigation: any}) {
     const theme = useTheme();
     const [secureText, setSecureText] = React.useState(true);
-    const [username, setUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
+    const [username, setUsername] = React.useState('jean-sebastien');
+    const [password, setPassword] = React.useState('Toto@123*');
     const [error, setError] = React.useState<string | null>(null);
     const [inputError, setInputError] = React.useState<string | null>(null);
     const dispatch = useDispatch();
@@ -73,7 +73,7 @@ export default function Login({ navigation }: { navigation: any}) {
         } else {
             setError(null);
             setInputError(null);
-            postSignIn({username, password}).then((res) => {
+            postSignIn({username: username.trim(), password}).then((res) => {
                 const data: SignInPropsRes = res;
                 if (data.success) {
 
