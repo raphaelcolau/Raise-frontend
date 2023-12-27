@@ -26,7 +26,7 @@ export default function ModalContent({activity}: {activity: Training}) {
                 return (
                     <View key={index}>
                         <View key={index} style={modalStyles.Exercise}>
-                            <StateIndicator id={exercise.exerciseId} status={exercise.exerciseState} />
+                            <StateIndicator id={index + 1} status={exercise.exerciseState} />
                             <Text variant='bodyLarge'>{exercise.exerciseName}</Text>
                         </View>
                         {isLast ? null : <View style={{height: 15, width: 1, backgroundColor: theme.colors.onSurface, marginLeft: 11, marginTop: 3, marginBottom: 3}} />}
