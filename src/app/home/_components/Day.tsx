@@ -5,7 +5,17 @@ import { useTheme, Text } from 'react-native-paper';
 export default function Day({date, selected}: {date: Date, selected?: boolean}) {
     const theme = useTheme();
     const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
     const weekDay = date.toLocaleString('fr-FR', { weekday: 'short'}).substring(0, 3);
+    const today = new Date().getDate();
+    const todayMonth = new Date().getMonth();
+    const todayYear = new Date().getFullYear();
+    let weAreInCurrentDay = false;
+
+    if (day === today && month === todayMonth && year === todayYear) {
+        weAreInCurrentDay = true;
+    }
 
     const styles = StyleSheet.create({
         container: {
@@ -16,10 +26,12 @@ export default function Day({date, selected}: {date: Date, selected?: boolean}) 
             justifyContent: 'center',
             alignItems: 'center',
             gap: 3,
-            backgroundColor: selected ? theme.colors.primary : 'transparent',
+            backgroundColor: weAreInCurrentDay ? theme.colors.primary : 'transparent',
+            borderColor: selected ? theme.colors.primary : 'transparent',
+            borderWidth: selected ? 1 : 0,
         },
         text: {
-            color: selected ? '#000000' : '#FFFFFF',
+            color: weAreInCurrentDay ? '#000000' : '#FFFFFF',
             textTransform: 'capitalize',
         }
     });
