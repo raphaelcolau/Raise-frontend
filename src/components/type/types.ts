@@ -12,9 +12,9 @@ export enum GENDER {
 }
 
 export enum EXERCISE_STATUS {
-    NOT_STARTED,
-    STARTED,
-    COMPLETED
+    NOT_STARTED = 'NOT_STARTED',
+    STARTED = 'STARTED',
+    COMPLETED = 'COMPLETED',
 }
 
 export enum DAYS {
@@ -28,9 +28,9 @@ export enum DAYS {
 }
 
 export enum TRAINING_STATUS {
-    CANCELLED,
-    IN_PROGRESS,
-    PERFORMED,
+    CANCELLED = 'CANCELLED',
+    IN_PROGRESS = 'IN_PROGRESS',
+    PERFORMED = 'PERFORMED',
 }
 
 export type User = {
