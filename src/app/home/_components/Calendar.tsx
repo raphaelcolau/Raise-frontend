@@ -1,8 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { IconButton, useTheme, Text } from 'react-native-paper';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { setCurrentDay } from '../../../store/slice/currentDaySlice';
+import { returnCalendarInfo } from '../../../adapters/training/returnCalendarInfo';
+import { DAYS, Training } from '../../../components/type/types';
+import { updateTrainings } from '../../../store/slice/trainingsSlice';
 
 LocaleConfig.locales['fr'] = {
     monthNames: [
@@ -50,7 +54,7 @@ function CalendarHeader({ date, setDate, expand }: { date: Date, setDate: Functi
                     <IconButton icon='chevron-right' onPress={() => setDate(new Date(date.getFullYear(), date.getMonth() + 1, date.getDate()))}/>
                 </View>
 
-                <IconButton icon='arrow-collapse' onPress={() => console.log('collapse')} />
+                <IconButton icon='arrow-collapse' onPress={() => expand(false)} />
 
             </View>
                 
@@ -85,10 +89,56 @@ export default function CalendarModal({dismiss}: {dismiss: Function}) {
             paddingBottom: 5,
         },
     }
-    const [selectedDay, setSelectedDay] = useState('');
     const currentDay = useSelector((state: any) => state.currentDay.day);
+    const allTrainings = useSelector((state: any) => state.trainings.saved);
     const currentDate = new Date(currentDay);
-    const currentDateKey = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+    const currentDateKey = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+
+    useEffect(() => {
+        returnCalendarInfo().then((data) => {
+            if (data.data) {
+                let newAllTrainings = { ...allTrainings };
+
+                // Loop through each day of the current month
+                const currentMonth = date.getMonth();
+                const currentYear = date.getFullYear();
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const currentDateKey = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                    
+                    if (newAllTrainings[currentDateKey]) {
+                        delete newAllTrainings[currentDateKey];
+                    }
+                    
+                    const dayOfWeek: number = new Date(currentYear, currentMonth, day).getDay() - 1;
+                    const enumDayOfWeek = [DAYS.MONDAY, DAYS.TUESDAY, DAYS.WEDNESDAY, DAYS.THURSDAY, DAYS.FRIDAY, DAYS.SATURDAY, DAYS.SUNDAY];
+
+                    // Loop through each training day in the data
+                    data.data.forEach((training: any) => {
+                        const trainingDays = training.trainingDays;
+
+                        // Check if the current day matches any training day
+                        trainingDays.forEach((trainingDay: DAYS) => {
+                            if (trainingDay === DAYS[enumDayOfWeek[dayOfWeek]]) {
+                                // Add the training object to the corresponding day in newAllTrainings
+                                if (!newAllTrainings[currentDateKey]) {
+                                    newAllTrainings[currentDateKey] = [];
+                                }
+                                newAllTrainings[currentDateKey].push(training);
+                            }
+                        });
+            
+                    });
+                }
+
+                dispatch(updateTrainings(newAllTrainings));
+            }
+        });
+
+    }, [date.getMonth()]);
+
+
 
     return (
         <Calendar
@@ -124,28 +174,43 @@ export default function CalendarModal({dismiss}: {dismiss: Function}) {
                         borderRadius: 5,
                         borderColor: currentDateKey == date?.dateString ? theme.colors.primary : 'none',
                         borderWidth: currentDateKey == date?.dateString ? 1 : 0,
+                        position: 'relative',
                     },
                     text: {
                         textAlign: 'center',
                         color: state == 'disabled' ? theme.colors.outline : theme.colors.onSurface,
-                    }
+                    },
+                    dotsContainer: {
+                        position: 'absolute',
+                        bottom: 2,
+                        left: 0,
+                        right: 0,
+                        height: 4,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: 1,
+                    },
                 });
 
-                // console.log(selectedDay == date?.dateString)
-
                 return (
-                    <TouchableOpacity onPress={() => setSelectedDay(String(date?.dateString))}>
+                    <TouchableOpacity onPress={() => {
+                        dispatch(setCurrentDay(String(date?.dateString)));
+                        dismiss(false);
+                    }}>
                         <View style={styles.container}>
                             <Text style={styles.text}>{date?.day}</Text>
+                            <View style={styles.dotsContainer}>
+                                {allTrainings[String(date?.dateString)]?.map((training: Training, index: number) => {
+                                    return (
+                                        <View key={index} style={{width: 5, height: 5, borderRadius: 5, backgroundColor: training.trainingIconHexadecimalColor + (state == 'disabled' ? '80' : '')}} />
+                                    )
+                                })}
+                            </View>
                         </View>
                     </TouchableOpacity>
                 );
-            }}
-            markedDates={{
-                [selectedDay]: {
-                    selected: true,
-                    selectedColor: theme.colors.primary,
-                }
             }}
         />
     )

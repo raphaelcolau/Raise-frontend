@@ -19,7 +19,9 @@ export default function InlineCalendar() {
 
     useEffect(() => {
         getUserTrainings(new Date(currentDay)).then((trainings) => {
-            toSave[new Date(currentDay).toLocaleDateString()] = trainings;
+            const currentDate = new Date(currentDay);
+            const currentDateKey = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+            toSave[currentDateKey] = trainings;
             dispatch(updateTrainings(toSave));
             setActivityList(trainings ? trainings : []);
         });
