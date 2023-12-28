@@ -1,16 +1,18 @@
-import React from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import { IconButton, Surface, useTheme } from 'react-native-paper';
+import { IconButton, Surface, useTheme, Portal, Modal, Text } from 'react-native-paper';
 import StyledText from '../../../components/styled/Text';
 import Week from './Week';
 import { useSelector } from 'react-redux';
+import Calendar from './Calendar';
 
-export default function WeeklyCalendar() {
+export default function InlineCalendar() {
     const theme = useTheme();
-    const flatListRef = React.useRef(null);
-    const [scrollIndex, setScrollIndex] = React.useState(2);
-    const [displayedMonthAndYear, setDisplayedMonthAndYear] = React.useState(currentMonthAndYear());
+    const flatListRef = useRef(null);
+    const [scrollIndex, setScrollIndex] = useState(2);
+    const [displayedMonthAndYear, setDisplayedMonthAndYear] = useState(currentMonthAndYear());
     const currentDay: string = useSelector((state: any) => state.currentDay.day);
+    const [expanded, setExpanded] = useState(false);
 
     const styles = StyleSheet.create({
         container: {
@@ -68,7 +70,7 @@ export default function WeeklyCalendar() {
         }}
     />;
 
-    React.useEffect(() => {
+    useEffect(() => {
         setDisplayedMonthAndYear(currentMonthAndYear());
     }, [currentDay]);
 
@@ -76,6 +78,7 @@ export default function WeeklyCalendar() {
         const newScrollIndex = Math.round(event.nativeEvent.contentOffset.x / 344);
         if (newScrollIndex === scrollIndex) return;
         setScrollIndex(newScrollIndex);
+        // Increment to the next week if the user scroll to the next week
         // if (flatListRef.current === null) return;
         // (flatListRef.current as any).scrollToIndex({index: newScrollIndex, animated: true})
     };
@@ -89,34 +92,50 @@ export default function WeeklyCalendar() {
     };
 
     return (
-        <View style={styles.container}>
-            <Surface elevation={1} style={styles.surfaceContainer}>
-                
-                <View style={styles.topContainer}>
+        <View>
+            <Portal>
+                <Modal
+                    visible={expanded}
+                    onDismiss={() => setExpanded(false)}
+                    contentContainerStyle={{backgroundColor: 'transparent', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+                >
+                    <View style={{width: '80%'}}>
+                        <Calendar dismiss={setExpanded}/>
+                    </View>
+                </Modal>
+            </Portal>
 
-                    <StyledText style={{textTransform: 'capitalize', color: theme.colors.onSurface}} >{displayedMonthAndYear}</StyledText>
+            <View style={styles.container}>
+                <Surface elevation={1} style={styles.surfaceContainer}>
+                    
+                    <View style={styles.topContainer}>
 
-                    <View style={styles.buttons}>
-                        <StyledIconButton icon="chevron-left" onPress={() => handleMove('backward')}/>
-                        <StyledIconButton icon="chevron-right" onPress={() => handleMove('forward')}/>
+                        <StyledText style={{textTransform: 'capitalize', color: theme.colors.onSurface}} >{displayedMonthAndYear}</StyledText>
+
+                        <View style={styles.buttons}>
+                            {/* <StyledIconButton icon="chevron-left" onPress={() => handleMove('backward')}/> */}
+                            {/* <StyledIconButton icon="chevron-right" onPress={() => handleMove('forward')}/> */}
+                            <StyledIconButton icon="arrow-expand" onPress={() => setExpanded(true)}/>
+
+                        </View>
+
                     </View>
 
-                </View>
+                    <FlatList
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.scrollView}
+                        data={[0, 1, 2, 3]}
+                        ref={flatListRef}
+                        keyExtractor={(item) => item.toString()}
+                        renderItem={({item}) => <Week week={item} />}
+                        // initialScrollIndex={2}
+                        onScroll={handleScroll}
+                        scrollEventThrottle={16}
+                    />
 
-                <FlatList
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={styles.scrollView}
-                    data={[0, 1, 2, 3]}
-                    ref={flatListRef}
-                    keyExtractor={(item) => item.toString()}
-                    renderItem={({item}) => <Week week={item} />}
-                    // initialScrollIndex={2}
-                    onScroll={handleScroll}
-                    scrollEventThrottle={16}
-                />
-
-            </Surface>
+                </Surface>
+            </View>
         </View>
     )
 }
