@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, Pressable } from 'react-native';
 import { IconButton, Surface, useTheme, Portal, Modal, Text } from 'react-native-paper';
 import StyledText from '../../../components/styled/Text';
 import Week from './Week';
@@ -90,6 +90,7 @@ export default function InlineCalendar() {
         if (flatListRef.current === null) return;
         (flatListRef.current as any).scrollToIndex({index: (scrollIndex + move), animated: true})
     };
+
 
     return (
         <View>

@@ -25,7 +25,6 @@ export default function ModalConfirmFooter({activity, dismiss}: {activity: Train
             date: new Date(currentDay),
         };
         validateTrainingSession(props).then((res) => {
-            console.log(res)
             dismiss(false);
         });
     }

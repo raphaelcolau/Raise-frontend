@@ -36,7 +36,6 @@ export default function StateIndicator({id, status}: {id: number, status: EXERCI
         },
     });
 
-    // if (status === EXERCISE_STATUS.COMPLETED) return <Icon source="close-circle-outline" size={23} color={theme.colors.error} />
     if (status === EXERCISE_STATUS.COMPLETED) return <View style={styles.completed}><Icon source="check" size={20} color='white' /></View>
     else if (status === EXERCISE_STATUS.STARTED) return <Text adjustsFontSizeToFit={true} variant="bodySmall" style={styles.started}>{id}</Text>
     else return <Text adjustsFontSizeToFit={true} variant="bodySmall" style={styles.notStarted}>{id}</Text>
