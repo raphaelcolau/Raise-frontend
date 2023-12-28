@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import MainButton from '../../../../../components/styled/Button';
 
-export default function ModalFooter() {
+export default function ModalFooter({dismiss, toOpen}: {dismiss: Function, toOpen: Function}) {
     const theme = useTheme();
 
     const modalStyles = StyleSheet.create({
@@ -19,6 +19,11 @@ export default function ModalFooter() {
         },
     });
 
+    const handleValidate = () => {
+        dismiss(false);
+        toOpen(true);
+    }
+
     return (
         <View style={modalStyles.ModalFooter}>
 
@@ -26,7 +31,12 @@ export default function ModalFooter() {
                 Annuler
             </Button>
 
-            <Button style={{...modalStyles.ModalButton, borderColor: theme.colors.tertiary}} textColor={theme.colors.tertiary} mode='outlined'>
+            <Button 
+                style={{...modalStyles.ModalButton, borderColor: theme.colors.tertiary}}
+                textColor={theme.colors.tertiary}
+                mode='outlined'
+                onPress={() => handleValidate()}
+            >
                 Valider
             </Button>
 
