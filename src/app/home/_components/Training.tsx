@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableHighlight , View } from 'react-native';
-import {  Surface, useTheme, Modal, Portal, IconButton, Icon, Button } from 'react-native-paper';
+import {  Surface, useTheme, Modal, Portal } from 'react-native-paper';
 import Text from '../../../components/styled/Text';
 import { Training } from '../../../components/type/types';
 import BasicContent from './modal/TrainingSessionDetails/BasicContent';
