@@ -12,9 +12,10 @@ import Activity from './Training';
 export default function InlineCalendar() {
     const theme = useTheme();
     const dispatch = useDispatch();
-    const [activityList, setActivityList] = React.useState([]);
-    const currentDay: string = useSelector((state: any) => state.currentDay.day);
     const savedTrainings = useSelector((state: any) => state.trainings.saved);
+    const currentDay: string = useSelector((state: any) => state.currentDay.day);
+    const currentDayKey = `${new Date(currentDay).getFullYear()}-${(new Date(currentDay).getMonth() + 1).toString().padStart(2, '0')}-${new Date(currentDay).getDate().toString().padStart(2, '0')}`;
+    const [activityList, setActivityList] = React.useState(savedTrainings[currentDayKey] ? savedTrainings[currentDayKey] : []);
     const toSave = {...savedTrainings};
 
     useEffect(() => {
