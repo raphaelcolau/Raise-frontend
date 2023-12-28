@@ -1,6 +1,6 @@
 import React from 'react';
 import Text from '../../../../../components/styled/Text';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Icon, useTheme } from 'react-native-paper';
 import { EXERCISE_STATUS } from '../../../../../components/type/types';
 
@@ -8,7 +8,7 @@ export default function StateIndicator({id, status}: {id: number, status: EXERCI
     const theme = useTheme();
     const styles = StyleSheet.create({
         completed: {
-            backgroundColor: theme.colors.tertiary,
+            backgroundColor: 'green',
             borderRadius: 15,
         },
         started: {
@@ -36,7 +36,8 @@ export default function StateIndicator({id, status}: {id: number, status: EXERCI
         },
     });
 
-    if (status === EXERCISE_STATUS.COMPLETED) return <Icon source="close-circle-outline" size={23} color={theme.colors.error} />
+    // if (status === EXERCISE_STATUS.COMPLETED) return <Icon source="close-circle-outline" size={23} color={theme.colors.error} />
+    if (status === EXERCISE_STATUS.COMPLETED) return <View style={styles.completed}><Icon source="check" size={20} color='white' /></View>
     else if (status === EXERCISE_STATUS.STARTED) return <Text adjustsFontSizeToFit={true} variant="bodySmall" style={styles.started}>{id}</Text>
     else return <Text adjustsFontSizeToFit={true} variant="bodySmall" style={styles.notStarted}>{id}</Text>
 }

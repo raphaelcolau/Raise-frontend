@@ -6,7 +6,7 @@ import { Training, TRAINING_STATUS } from '../../../../../components/type/types'
 
 export default function BasicContent({activity}: {activity: Training}) {
     const theme = useTheme();
-    const isShorted = ( (activity.trainingStatus === TRAINING_STATUS.PERFORMED || activity.trainingStatus === TRAINING_STATUS.CANCELLED || activity.trainingStatus === null) ? true : false)
+    const isShorted = ( activity.trainingStatus === TRAINING_STATUS.PERFORMED || activity.trainingStatus === TRAINING_STATUS.CANCELLED ? true : false)
 
     const styles = StyleSheet.create({
         Surface: {
@@ -41,11 +41,11 @@ export default function BasicContent({activity}: {activity: Training}) {
             
             <View style={styles.Left}>
 
-                {isShorted ? <Icon source={activity.trainingIconName.replace('icon_', '')} size={36} color={activity.trainingIconHexadecimalColor} /> : null}
+                {isShorted ? null : <Icon source={activity.trainingIconName.replace('icon_', '')} size={36} color={activity.trainingIconHexadecimalColor} />}
 
                 <View style={styles.Informations}>
                     <Text variant="bodyLarge" style={{textTransform: 'capitalize'}}>{activity.trainingName}</Text>
-                    <Text variant="bodyMedium" style={styles.Subtiles}>{activity.numberOfExercise} {activity.numberOfExercise > 1 ? 'exercices' : 'exercice'}</Text>
+                    {isShorted ? null : <Text variant="bodyMedium" style={styles.Subtiles}>{activity.numberOfExercise} {activity.numberOfExercise > 1 ? 'exercices' : 'exercice'}</Text>}
                 </View>
 
             </View>
