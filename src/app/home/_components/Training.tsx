@@ -3,13 +3,12 @@ import { StyleSheet, TouchableHighlight , View } from 'react-native';
 import {  Surface, useTheme, Modal, Portal, IconButton, Icon, Button } from 'react-native-paper';
 import Text from '../../../components/styled/Text';
 import { Training } from '../../../components/type/types';
-import BasicContent from './modal/TrainingSesseionDetails/BasicContent';
-import ModalHeader from './modal/TrainingSesseionDetails/ModalHeader';
-import ModalFooter from './modal/TrainingSesseionDetails/ModalFooter';
-import ModalContent from './modal/TrainingSesseionDetails/ModalContent';
-import StyledButton from '../../../components/styled/Button';
-import { ValidateTrainingSessionProps, validateTrainingSession } from '../../../adapters/training/validateTrainingSession';
-import { useSelector } from 'react-redux';
+import BasicContent from './modal/TrainingSessionDetails/BasicContent';
+import ModalHeader from './modal/TrainingSessionDetails/ModalHeader';
+import ModalFooter from './modal/TrainingSessionDetails/ModalFooter';
+import ModalContent from './modal/TrainingSessionDetails/ModalContent';
+import ModalConfirmHeader from './modal/TrainingConfirm/ModalHeader';
+import ModalConfirmFooter from './modal/TrainingConfirm/ModalFooter';
 
 export default function Activity({activity}: {activity: Training}) {
     const theme = useTheme();
@@ -34,77 +33,7 @@ export default function Activity({activity}: {activity: Training}) {
         },
     });
 
-    function ModalConfirmHeader({dismiss, activity}: {dismiss: Function, activity: Training}) {
-        const styles = StyleSheet.create({
-            Header: {
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-            },
-            container: {
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: -10,
-            },
-            subtitle: {
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                gap: 8,
-            },
-        });
-
-        return (
-            <View style={styles.container}>
-
-                <View style={styles.Header}>
-                    <Text variant="headlineSmall">Valider la séance</Text>
-                    <IconButton icon="close" onPress={() => dismiss(false)} />
-                </View>
-
-                <View style={styles.subtitle}>
-                    <Icon source={activity.trainingIconName.replace('icon_', '')} size={18} color={activity.trainingIconHexadecimalColor} />
-                    <Text variant="titleMedium">{activity.trainingName}</Text>
-                </View>
-            </View>
-        )
-    }
-
-    function ModalConfirmFooter({activity, dismiss}: {activity: Training, dismiss: Function}) {
-        const theme = useTheme();
-        const currentDay: string = useSelector((state: any) => state.currentDay.day);
-        const styles = StyleSheet.create({
-            container: {
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                gap: 5,
-            },
-        });
-
-        const handleValidate = () => {
-            const props: ValidateTrainingSessionProps = {
-                id: activity.trainingId,
-                date: new Date(currentDay),
-            };
-            validateTrainingSession(props).then((res) => {
-                console.log(res)
-                dismiss(false);
-            });
-        }
-        
-        return (
-            <View style={styles.container}>
-                <Button mode="text" textColor={theme.colors.onSurface}>Modifier et valider</Button>
-                <StyledButton onPress={handleValidate}>Valider</StyledButton>
-            </View>
-        )
-    }
+    
 
     return (
         <View>
@@ -143,9 +72,13 @@ export default function Activity({activity}: {activity: Training}) {
             </Modal>
         </Portal>
 
+
+        {/* Activity */}
         <TouchableHighlight  onPress={() => setIsVisibleDetails(true)}>
             <BasicContent activity={activity} />
         </TouchableHighlight >
+
+
 
         </View>
     )
