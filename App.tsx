@@ -23,6 +23,7 @@ const darktheme = {
     border: '#000000',
     notification: '#FFC107',
     tertiary: '#1B9820',
+    backdrop: '#000000B9',
   },
 };
 
