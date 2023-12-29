@@ -9,7 +9,7 @@ import StyledTextInput from '../../components/styled/TextInput';
 import { postSignIn } from '../../adapters/signin';
 import { SignInPropsRes } from '../../components/type/types';
 import { useDispatch } from 'react-redux';
-import { setToken } from '../../store/slice/authSlice';
+import { setAccessToken, setRefreshToken } from '../../store/slice/authSlice';
 import { setIsAuthenticated } from '../../store/slice/authSlice';
 
 export default function Login({ navigation }: { navigation: any}) {
@@ -83,7 +83,8 @@ export default function Login({ navigation }: { navigation: any}) {
                     setInputError(null);
                     setSecureText(true);
 
-                    dispatch(setToken(String(data.data?.refreshToken)));
+                    dispatch(setRefreshToken(String(data.data?.refreshToken)));
+                    dispatch(setAccessToken(String(data.data?.accessToken)));
                     dispatch(setIsAuthenticated(true));
                     navigation.navigate('Home');
                 } else {

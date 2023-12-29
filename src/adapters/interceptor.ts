@@ -1,18 +1,16 @@
 import axios, { AxiosError } from "axios";
 import { API_URL } from "./api";
-import * as SecureStore from 'expo-secure-store';
+import store from "../store/store";
 
 
 export function interceptor() {
     axios.interceptors.request.use(
         function (config) {
-            const token = SecureStore.getItemAsync("accessToken");
-            return token.then((value) => {
-                if (value) {
-                    config.headers.Authorization = `Bearer ${value}`;
-                }
-                return config;
-            });
+            const token = store.getState().auth.accessToken;
+
+            if (token) {config.headers.Authorization = `Bearer ${token}`;}
+            return config;
+
         },
         function (error) {
 
@@ -32,20 +30,20 @@ export function interceptor() {
 
 
 function refreshToken() {
-    const refreshToken = SecureStore.getItemAsync("refreshToken");
+    const refreshToken = store.getState().auth.refreshToken;
 
-    return refreshToken.then((value) => {
-        if (value) {
+    return (() => {
+        if (refreshToken) {
             axios.post(`${API_URL}/api/auth/refreshtoken`, {
-                refreshToken: value
+                refreshToken: refreshToken
             }).then((response) => {
                 const data = response.data;
 
                 if (data.success) {
-                    SecureStore.setItemAsync("accessToken", data.data?.accessToken ?? "");
-                    SecureStore.setItemAsync("refreshToken", data.data?.refreshToken ?? "");
+                    store.dispatch({ type: "auth/setAccessToken", payload: data.data?.accessToken });
+                    store.dispatch({ type: "auth/setRefreshToken", payload: data.data?.refreshToken });
                 }
             });
         }
-    });
+    })();
 }
