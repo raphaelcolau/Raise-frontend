@@ -6,6 +6,11 @@ node_modules/
 # API
 src/adapters/api.ts
 
+# build
+build/
+android/
+ios/
+
 # Expo
 .expo/
 dist/
