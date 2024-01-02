@@ -1,12 +1,13 @@
 import { Avatar, IconButton, withTheme, TouchableRipple } from 'react-native-paper';
 import View from '../../../components/styled/View';
 import { Image } from 'react-native';
-import * as Updates from 'expo-updates';
 import * as SecureStore from 'expo-secure-store';
 import { useDispatch } from 'react-redux';
-import { setToken } from '../../../store/slice/authSlice';
+import { setAccessToken } from '../../../store/slice/authSlice';
+import { setRefreshToken } from '../../../store/slice/authSlice';
 import { setIsAuthenticated } from '../../../store/slice/authSlice';
 import { useNavigation } from '@react-navigation/native';
+import { StyledIconButton } from '../../../components/styled/IconButton';
 
 
 export default function Header() {
@@ -27,15 +28,13 @@ export default function Header() {
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
-    const StyledIconButton = withTheme(({ theme, ...props }: any) => <IconButton style={{backgroundColor: theme.colors.card}} {...props} theme={theme} />)
-
-
     return (
         <View style={styles.container}>
             <StyledIconButton icon="dots-horizontal" />
             <Image style={styles.imageLogo} source={require('../../../assets/images/logo.png')} />
             <TouchableRipple onPress={() => {
-                dispatch(setToken(''));
+                dispatch(setAccessToken(''));
+                dispatch(setRefreshToken(''));
                 dispatch(setIsAuthenticated(false));
                 SecureStore.deleteItemAsync('refreshToken');
                 SecureStore.deleteItemAsync('accessToken')
