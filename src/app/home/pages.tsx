@@ -19,7 +19,7 @@ export default function Home({navigation, route}: {navigation: any, route: any})
         <StyledView style={styles.container}>
             <Header />
             <InlineCalendar />
-            <TrainingsDay />
+            <TrainingsDay navigation={navigation} route={route} />
             <BottomBar />
         </StyledView>
     )

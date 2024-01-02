@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateTrainings } from '../../../store/slice/trainingsSlice';
 import Activity from './Training';
 
-export default function InlineCalendar() {
+export default function InlineCalendar({navigation, route}: {navigation: any, route: any}) {
     const theme = useTheme();
     const dispatch = useDispatch();
     const savedTrainings = useSelector((state: any) => state.trainings.saved);
@@ -51,6 +51,7 @@ export default function InlineCalendar() {
                 icon='plus'
                 mode="text"
                 theme={{ colors: { primary: theme.colors.onBackground } }}
+                onPress={ () => navigation.navigate('CreateTraining') }
             >
                 Programmer des séances
             </Button>
