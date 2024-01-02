@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import StyledView from '../../../components/styled/View';
 import StyledText from '../../../components/styled/Text';
 import { IconButton, Icon, useTheme, Text, Modal } from 'react-native-paper';
@@ -7,6 +7,7 @@ import { StyledIconButton } from '../../../components/styled/IconButton';
 import Button from '../../../components/styled/Button';
 import StyledTextInput from '../../../components/styled/TextInput';
 import { DAYS } from '../../../components/type/types';
+import Chip from '../../../components/styled/Chip';
 
 function HeaderReturn({ navigation, route }: { navigation: any, route: any}) {
     const styles = StyleSheet.create({
@@ -123,7 +124,7 @@ function DayOfWeekInput() {
 
     return (
         <View style={{display: 'flex', flexDirection: 'column', gap: 15}}>
-            <Text variant="headlineSmall">Jour(s) de séance</Text>
+            <Text variant="titleMedium">Jour(s) de séance</Text>
             <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                 {days.map((day) => (
                     <StyledRoundSwitch
@@ -145,70 +146,115 @@ function DayOfWeekInput() {
     )
 }
 
+function RemembersInput() {
+    const { colors } = useTheme();
+    const [selectedRemembers, setSelectedRemembers] = React.useState<string[]>([]);
+
+    const chip = [
+        {label: 'Échauffement', value: 'warmup'},
+        {label: 'Étirement', value: 'stretch'},
+    ]
+
+    return (
+        <View style={{display: 'flex', gap: 13}}>
+            <Text variant="titleMedium">Rappel pendant la séance</Text>
+            
+            <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
+                {chip.map((c) =>
+                    <Chip 
+                        key={c.value}
+                        selected={selectedRemembers.includes(c.value)}
+                        icon={selectedRemembers.includes(c.value) ? 'check' : undefined}
+                        onPress={() => {
+                            if (selectedRemembers.includes(c.value)) {
+                                setSelectedRemembers(selectedRemembers.filter((r) => r !== c.value));
+                            } else {
+                                setSelectedRemembers([...selectedRemembers, c.value]);
+                            }
+                        }}
+                    >
+                        {c.label}
+                    </Chip>
+                )}
+            </View>
+
+        </View>
+    )
+}
+
 export function CreateTrainingPage({ navigation, route }: { navigation: any, route: any}) {
+    const { colors } = useTheme();
     const styles = StyleSheet.create({
         container: {
             position: 'relative',
             width: '100%',
-            height: '100%',
+            height: Dimensions.get('window').height,
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
             gap: 13,
             padding: 10,
+            backgroundColor: colors.background,
         },
     });
 
   return (
-    <StyledView style={styles.container}>
-        <HeaderReturn navigation={navigation} route={route} />
-        <StyledText variant="headlineSmall">Programmer une séance</StyledText>
+    <ScrollView
+        style={{flex: 1}}
+        StickyHeaderComponent={() => <HeaderReturn navigation={navigation} route={route} />} //TODO: Fix sticky header
+    >
+        <StyledView style={styles.container}>
+            <HeaderReturn navigation={navigation} route={route} />
+            <StyledText variant="headlineSmall">Programmer une séance</StyledText>
 
-        <PresetInput />
+            <PresetInput />
 
-        <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
-            <ModalInput value="🦾" style={{width: 80}} center/>
-            <StyledTextInput
-                label={'Nom de la séance'}
-                placeholder={'Ex: Pectoraux'}
-                style={{flex: 1}}
-            />
-        </View>
-
-        <DayOfWeekInput />
-
-        <ModalInput
-            label="Fréquence"
-            value="Chaque semaine"
-            right={
-                <Icon
-                    source="menu-down"
-                    size={30}
+            <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
+                <ModalInput value="🦾" style={{width: 80}} center/>
+                <StyledTextInput
+                    label={'Nom de la séance'}
+                    placeholder={'Ex: Pectoraux'}
+                    style={{flex: 1}}
                 />
-            }
-        />
+            </View>
 
-        <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
+            <DayOfWeekInput />
+
             <ModalInput
-                label="Débuter"
-                value="Aujourd'hui"
-                style={{flex: 1}}
+                label="Fréquence"
+                value="Chaque semaine"
+                right={
+                    <Icon
+                        source="menu-down"
+                        size={30}
+                    />
+                }
             />
-            <ModalInput
-                label="Terminer"
-                value="Jamais"
-                style={{flex: 1}}
+
+            <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
+                <ModalInput
+                    label="Débuter"
+                    value="Aujourd'hui"
+                    style={{flex: 1}}
+                />
+                <ModalInput
+                    label="Terminer"
+                    value="Jamais"
+                    style={{flex: 1}}
+                />
+            </View>
+            
+            <StyledTextInput
+                label={'Notes'}
+                placeholder={'Ex: 3 séries de 10 répétitions'}
+                multiline={true}
+                numberOfLines={2}
             />
-        </View>
-        
-        <StyledTextInput
-            label={'Notes'}
-            placeholder={'Ex: 3 séries de 10 répétitions'}
-            multiline={true}
-            numberOfLines={2}
-        />
-   
-        <Button icon='play' style={{padding: 5}}>Ajouter la séance</Button>
-    </StyledView>
+
+            <RemembersInput />
+    
+            <Button icon='play' style={{padding: 5}}>Ajouter la séance</Button>
+        </StyledView>
+    </ScrollView>
   );
 }
