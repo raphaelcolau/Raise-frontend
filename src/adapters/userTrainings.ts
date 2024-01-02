@@ -4,7 +4,7 @@ import { Training } from "../components/type/types";
 
 export async function getUserTrainings(selectedDay: Date) {
     try {
-        const response = await axios.get(`${API_URL}/api/training/validate-training-day/${selectedDay.toISOString()}`);
+        const response = await axios.get(`${API_URL}/api/training/validate/${selectedDay.toISOString()}`);
         const data = response.data;
         const trainings: Array<Training> = data.data;
 
