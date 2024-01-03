@@ -8,6 +8,7 @@ import Button from '../../../components/styled/Button';
 import StyledTextInput from '../../../components/styled/TextInput';
 import { DAYS } from '../../../components/type/types';
 import Chip from '../../../components/styled/Chip';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 function HeaderReturn({ navigation, route }: { navigation: any, route: any}) {
     const styles = StyleSheet.create({
@@ -182,6 +183,54 @@ function RemembersInput() {
     )
 }
 
+function StartEndPicker() {
+    const [endDate, setEndDate] = React.useState<Date | null>(null);
+    const [startDate, setStartDate] = React.useState<Date | null>(null);
+    const [showStartDatePicker, setShowStartDatePicker] = React.useState(false);
+    const [showEndDatePicker, setShowEndDatePicker] = React.useState(false);
+
+    const openStartDatePicker = () => {
+        setShowStartDatePicker(true);
+    };
+
+    const openEndDatePicker = () => {
+        setShowEndDatePicker(true);
+    };
+
+    return (
+        <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
+
+            <TouchableOpacity onPress={openStartDatePicker}>
+                {showStartDatePicker && (
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={startDate ? startDate : new Date()}
+                        mode="date"
+                        display="default"
+                        onChange={(event, selectedDate) => {
+                            setShowStartDatePicker(false);
+                            setStartDate(selectedDate);
+                        }}
+                    />
+                )}
+                <ModalInput
+                    label="Débuter"
+                    value={startDate ? startDate.toDateString() : "Aujourd'hui"}
+                    style={{flex: 1}}
+                />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={openEndDatePicker}>
+                <ModalInput
+                    label="Terminer"
+                    value={endDate ? endDate.toDateString() : "Jamais"}
+                    style={{flex: 1}}
+                />
+            </TouchableOpacity>
+        </View>
+    )
+}
+
 export function CreateTrainingPage({ navigation, route }: { navigation: any, route: any}) {
     const { colors } = useTheme();
     const styles = StyleSheet.create({
@@ -231,18 +280,7 @@ export function CreateTrainingPage({ navigation, route }: { navigation: any, rou
                 }
             />
 
-            <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
-                <ModalInput
-                    label="Débuter"
-                    value="Aujourd'hui"
-                    style={{flex: 1}}
-                />
-                <ModalInput
-                    label="Terminer"
-                    value="Jamais"
-                    style={{flex: 1}}
-                />
-            </View>
+            <StartEndPicker />
             
             <StyledTextInput
                 label={'Notes'}
