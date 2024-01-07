@@ -9,7 +9,7 @@ import StyledTextInput from '../../../components/styled/TextInput';
 import { DAYS } from '../../../components/type/types';
 import Chip from '../../../components/styled/Chip';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetTraining, setDescription, setEndDate, setName, setStartDate, setTrainingDays } from '../../../store/slice/createTrainingSlice';
+import { resetTraining, setDescription, setEndDate, setHasStretching, setHasWarmUp, setName, setStartDate, setTrainingDays } from '../../../store/slice/createTrainingSlice';
 import DatePicker from './DatePicker';
 
 function HeaderReturn({ navigation, route }: { navigation: any, route: any}) {
@@ -155,34 +155,35 @@ function DayOfWeekInput() {
 
 function RemembersInput() {
     const { colors } = useTheme();
-    const [selectedRemembers, setSelectedRemembers] = React.useState<string[]>([]);
-
-    const chip = [
-        {label: 'Échauffement', value: 'warmup'},
-        {label: 'Étirement', value: 'stretch'},
-    ]
+    const hasWarmUp = useSelector((state: any) => state.createTraining.hasWarmUp);
+    const hasStretching = useSelector((state: any) => state.createTraining.hasStretching);
+    const dispatch = useDispatch();
 
     return (
         <View style={{display: 'flex', gap: 13}}>
             <Text variant="titleMedium">Rappel pendant la séance</Text>
             
             <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
-                {chip.map((c) =>
+                
                     <Chip 
-                        key={c.value}
-                        selected={selectedRemembers.includes(c.value)}
-                        icon={selectedRemembers.includes(c.value) ? 'check' : undefined}
+                        selected={hasWarmUp}
+                        icon={hasWarmUp ? 'check' : undefined}
                         onPress={() => {
-                            if (selectedRemembers.includes(c.value)) {
-                                setSelectedRemembers(selectedRemembers.filter((r) => r !== c.value));
-                            } else {
-                                setSelectedRemembers([...selectedRemembers, c.value]);
-                            }
+                            dispatch(setHasWarmUp(!hasWarmUp));
                         }}
                     >
-                        {c.label}
+                        Échauffement
                     </Chip>
-                )}
+
+                    <Chip 
+                        selected={hasStretching}
+                        icon={hasStretching ? 'check' : undefined}
+                        onPress={() => {
+                            dispatch(setHasStretching(!hasStretching));
+                        }}
+                    >
+                        Étirement
+                    </Chip>
             </View>
 
         </View>
