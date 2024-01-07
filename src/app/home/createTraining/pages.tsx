@@ -9,7 +9,7 @@ import StyledTextInput from '../../../components/styled/TextInput';
 import { DAYS } from '../../../components/type/types';
 import Chip from '../../../components/styled/Chip';
 import { useDispatch, useSelector } from 'react-redux';
-import { setEndDate, setName, setStartDate } from '../../../store/slice/createTrainingSlice';
+import { resetTraining, setDescription, setEndDate, setName, setStartDate } from '../../../store/slice/createTrainingSlice';
 import DatePicker from './DatePicker';
 
 function HeaderReturn({ navigation, route }: { navigation: any, route: any}) {
@@ -20,13 +20,14 @@ function HeaderReturn({ navigation, route }: { navigation: any, route: any}) {
             padding: 10,
         },
     });
+    const dispatch = useDispatch();
 
     return (
         <StyledView style={styles.header}>
             <StyledIconButton
                 icon="chevron-left"
                 size={30}
-                onPress={() => navigation.goBack()}
+                onPress={() => {navigation.goBack(); dispatch(resetTraining())}}
             />
         </StyledView>
     )
@@ -304,6 +305,7 @@ export function CreateTrainingPage({ navigation, route }: { navigation: any, rou
                 placeholder={'Ex: 3 séries de 10 répétitions'}
                 multiline={true}
                 numberOfLines={2}
+                onChangeText={(text) => dispatch(setDescription(text))}
             />
 
             <RemembersInput />
