@@ -9,7 +9,7 @@ import StyledTextInput from '../../../components/styled/TextInput';
 import { DAYS } from '../../../components/type/types';
 import Chip from '../../../components/styled/Chip';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetTraining, setDescription, setEndDate, setName, setStartDate } from '../../../store/slice/createTrainingSlice';
+import { resetTraining, setDescription, setEndDate, setName, setStartDate, setTrainingDays } from '../../../store/slice/createTrainingSlice';
 import DatePicker from './DatePicker';
 
 function HeaderReturn({ navigation, route }: { navigation: any, route: any}) {
@@ -115,7 +115,9 @@ function StyledRoundSwitch({value, label, style, onPress, selected, ...props}: {
 }
 
 function DayOfWeekInput() {
-    const [selectedDays, setSelectedDays] = React.useState<DAYS[]>([]);
+    // const [selectedDays, setSelectedDays] = React.useState<DAYS[]>([]);
+    const selectedDays = useSelector((state: any) => state.createTraining.trainingDays);
+    const dispatch = useDispatch();
     const { colors } = useTheme();
     const days = [
         {label: 'Lun', value: DAYS.MONDAY},
@@ -139,9 +141,9 @@ function DayOfWeekInput() {
                         selected={selectedDays.includes(day.value)}
                         onPress={() => {
                             if (selectedDays.includes(day.value)) {
-                                setSelectedDays(selectedDays.filter((d) => d !== day.value));
+                                dispatch(setTrainingDays(selectedDays.filter((d: DAYS) => d !== day.value)));
                             } else {
-                                setSelectedDays([...selectedDays, day.value]);
+                                dispatch(setTrainingDays([...selectedDays, day.value]));
                             }
                         }}
                     />
@@ -193,8 +195,6 @@ function StartEndPicker() {
     const dispatch = useDispatch();
     const startDate = useSelector((state: any) => state.createTraining.startDate);
     const endDate = useSelector((state: any) => state.createTraining.endDate);
-
-    console.log(startDate, endDate)
 
     const openStartDatePicker = () => {
         setShowStartDatePicker(true);
