@@ -2,13 +2,15 @@ import React from 'react';
 import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import StyledView from '../../../components/styled/View';
 import StyledText from '../../../components/styled/Text';
-import { IconButton, Icon, useTheme, Text, Modal } from 'react-native-paper';
+import { IconButton, Icon, useTheme, Text, Modal, Portal } from 'react-native-paper';
 import { StyledIconButton } from '../../../components/styled/IconButton';
 import Button from '../../../components/styled/Button';
 import StyledTextInput from '../../../components/styled/TextInput';
 import { DAYS } from '../../../components/type/types';
 import Chip from '../../../components/styled/Chip';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { useDispatch, useSelector } from 'react-redux';
+import { setEndDate, setName, setStartDate } from '../../../store/slice/createTrainingSlice';
+import DatePicker from './DatePicker';
 
 function HeaderReturn({ navigation, route }: { navigation: any, route: any}) {
     const styles = StyleSheet.create({
@@ -36,6 +38,7 @@ function ModalInput({value, label, placeholder, right, style, center, ...props}:
     const styles = StyleSheet.create({
         container: {
             width: '100%',
+            minHeight: 50,
             backgroundColor: colors.surface,
             padding: 15,
             borderRadius: 15,
@@ -49,7 +52,7 @@ function ModalInput({value, label, placeholder, right, style, center, ...props}:
     });
     
     return (
-        <View style={{...styles.container, ...style}}>
+        <View style={{...styles.container, ...style}} {...props}>
 
             <View style={styles.content}>
 
@@ -184,10 +187,13 @@ function RemembersInput() {
 }
 
 function StartEndPicker() {
-    const [endDate, setEndDate] = React.useState<Date | null>(null);
-    const [startDate, setStartDate] = React.useState<Date | null>(null);
     const [showStartDatePicker, setShowStartDatePicker] = React.useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = React.useState(false);
+    const dispatch = useDispatch();
+    const startDate = useSelector((state: any) => state.createTraining.startDate);
+    const endDate = useSelector((state: any) => state.createTraining.endDate);
+
+    console.log(startDate, endDate)
 
     const openStartDatePicker = () => {
         setShowStartDatePicker(true);
@@ -197,33 +203,40 @@ function StartEndPicker() {
         setShowEndDatePicker(true);
     };
 
-    return (
-        <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
+    const month = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', "Septembre", 'Octobre', 'Novembre', 'Décembre'];
 
-            <TouchableOpacity onPress={openStartDatePicker}>
-                {showStartDatePicker && (
-                    <DateTimePicker
-                        testID="dateTimePicker"
-                        value={startDate ? startDate : new Date()}
-                        mode="date"
-                        display="default"
-                        onChange={(event, selectedDate) => {
-                            setShowStartDatePicker(false);
-                            setStartDate(selectedDate);
-                        }}
-                    />
-                )}
+    return (
+        <View style={{display: 'flex', flexDirection: 'row', gap: 13, height: 70}}>
+            <Portal>
+                <Modal visible={showStartDatePicker} onDismiss={() => setShowStartDatePicker(false)}>
+                    <DatePicker dismiss={() => setShowStartDatePicker(false)} mode='startDate' />
+                </Modal>
+
+                <Modal visible={showEndDatePicker} onDismiss={() => setShowEndDatePicker(false)}>
+                    <DatePicker dismiss={() => setShowEndDatePicker(false)} mode='endDate' />
+                </Modal>
+            </Portal>
+
+            <TouchableOpacity 
+                style={{flex: 1}}
+                onPress={openStartDatePicker}
+                onLongPress={() => dispatch(setStartDate(''))}
+            >
                 <ModalInput
                     label="Débuter"
-                    value={startDate ? startDate.toDateString() : "Aujourd'hui"}
+                    value={startDate ? `${new Date(startDate).getDate()} ${month[new Date(startDate).getMonth()]} ${new Date(startDate).getFullYear()}` : "Aujourd'hui"}
                     style={{flex: 1}}
                 />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={openEndDatePicker}>
+            <TouchableOpacity 
+                style={{flex: 1}}
+                onPress={openEndDatePicker}
+                onLongPress={() => dispatch(setEndDate(''))}
+            >
                 <ModalInput
                     label="Terminer"
-                    value={endDate ? endDate.toDateString() : "Jamais"}
+                    value={endDate ? `${new Date(endDate).getDate()} ${month[new Date(endDate).getMonth()]} ${new Date(endDate).getFullYear()}` : "Jamais"}
                     style={{flex: 1}}
                 />
             </TouchableOpacity>
@@ -233,6 +246,8 @@ function StartEndPicker() {
 
 export function CreateTrainingPage({ navigation, route }: { navigation: any, route: any}) {
     const { colors } = useTheme();
+    const createTraining = useSelector((state: any) => state.createTraining);
+    const dispatch = useDispatch();
     const styles = StyleSheet.create({
         container: {
             position: 'relative',
@@ -264,6 +279,8 @@ export function CreateTrainingPage({ navigation, route }: { navigation: any, rou
                     label={'Nom de la séance'}
                     placeholder={'Ex: Pectoraux'}
                     style={{flex: 1}}
+                    value={createTraining.name}
+                    onChangeText={(text) => dispatch(setName(text))}
                 />
             </View>
 
