@@ -11,6 +11,7 @@ import Chip from '../../../components/styled/Chip';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetTraining, setDescription, setEndDate, setHasStretching, setHasWarmUp, setIconHexadecimalColor, setIconName, setName, setStartDate, setTrainingDays } from '../../../store/slice/createTrainingSlice';
 import DatePicker from './DatePicker';
+import { postCreateTraining } from '../../../adapters/training/createTraining';
 
 function HeaderReturn({ navigation, route }: { navigation: any, route: any}) {
     const styles = StyleSheet.create({
@@ -247,7 +248,7 @@ function StartEndPicker() {
 }
 
 function IconSelector() {
-    const [showModal, setShowModal] = React.useState(true);
+    const [showModal, setShowModal] = React.useState(false);
     const { colors } = useTheme();
     const icon = useSelector((state: any) => state.createTraining.iconName);
     const iconHexadecimalColor = useSelector((state: any) => state.createTraining.iconHexadecimalColor);
@@ -405,13 +406,48 @@ export function CreateTrainingPage({ navigation, route }: { navigation: any, rou
             padding: 10,
             backgroundColor: colors.background,
         },
+        modal: {
+            display: 'flex',
+            backgroundColor: colors.surface,
+            padding: 10,
+            borderRadius: 15,
+        },
     });
+    const [showModal, setShowModal] = React.useState(true);
 
   return (
     <ScrollView
         style={{flex: 1}}
         StickyHeaderComponent={() => <HeaderReturn navigation={navigation} route={route} />} //TODO: Fix sticky header
     >
+        <Portal>
+            <Modal visible={showModal} onDismiss={() => setShowModal(false)}>
+                <Surface style={styles.modal}>
+                    <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                        <Text variant="titleLarge" style={{color: colors.primary}}>Séance ajoutée</Text>
+                        <IconButton icon='close' onPress={() => setShowModal(false)} />
+                    </View>
+
+                    <View style={{marginTop: -15}}>
+                        <Text variant="headlineSmall">Ajouter des exercises ?</Text>
+                        <Text variant="bodyMedium" style={{marginTop: 15, marginBottom: 25}}>Vous pouvez dès à présent ajouter des exercices à votre séance nouvellement crée.</Text>
+                    </View>
+
+                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', gap: 10}}>
+                        <Button mode="text" textColor={colors.onSurface} onPress={() => setShowModal(false)}>Ajouter plus tard</Button>
+                        <StyledButton onPress={() => {
+                            postCreateTraining(createTraining).then((res) => {
+                                dispatch(resetTraining());
+                                setShowModal(false)
+                            });
+                        }}>
+                            Ajouter
+                        </StyledButton>
+                    </View>
+
+                </Surface>
+            </Modal>
+        </Portal>
         <StyledView style={styles.container}>
             <HeaderReturn navigation={navigation} route={route} />
             <StyledText variant="headlineSmall">Programmer une séance</StyledText>
@@ -454,7 +490,7 @@ export function CreateTrainingPage({ navigation, route }: { navigation: any, rou
 
             <RemembersInput />
     
-            <StyledButton icon='play' style={{padding: 5}}>Ajouter la séance</StyledButton>
+            <StyledButton icon='play' style={{padding: 5}} onPress={() => setShowModal(true)}>Ajouter la séance</StyledButton>
         </StyledView>
     </ScrollView>
   );

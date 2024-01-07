@@ -152,9 +152,9 @@ export default function DatePicker({dismiss, mode}: {dismiss: Function, mode: 's
                     <TouchableOpacity onPress={() => {
                         if (date) {
                             if (mode == 'startDate') {
-                                dispatch(setStartDate(String(new Date(date.timestamp))));
+                                dispatch(setStartDate(new Date(date.timestamp).toISOString()));
                             } else if (mode == 'endDate') {
-                                dispatch(setEndDate(String(new Date(date.timestamp))));
+                                dispatch(setEndDate(new Date(date.timestamp).toISOString()));
                             }
                         }
                         dismiss(false);

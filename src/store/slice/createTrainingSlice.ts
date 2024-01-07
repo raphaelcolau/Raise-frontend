@@ -1,20 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { DAYS } from '../../components/type/types';
+import  { CreateTrainingProps } from '../../components/type/types';
 
-type CreateTrainingState = {
-    name: string;
-    description: string;
-    trainingDays: Array<DAYS>;
-    sportPreset: string | null;
-    startDate: string | null;
-    endDate: string | null;
-    hasWarmUp: boolean;
-    hasStretching: boolean;
-    iconName: string;
-    iconHexadecimalColor: string;
-};
-
-const initialState: CreateTrainingState = {
+const initialState: CreateTrainingProps = {
     name: '',
     description: '',
     trainingDays: [],

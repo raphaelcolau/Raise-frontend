@@ -104,3 +104,16 @@ export type Series = {
     restTime: string;
     weight: number;
 }
+
+export interface CreateTrainingState {
+    name: string;
+    description: string;
+    trainingDays: Array<DAYS>;
+    sportPreset: string | null;
+    startDate: string | null;
+    endDate: string | null;
+    hasWarmUp: boolean;
+    hasStretching: boolean;
+    iconName: string;
+    iconHexadecimalColor: string;
+};
