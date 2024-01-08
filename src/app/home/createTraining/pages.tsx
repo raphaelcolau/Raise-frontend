@@ -413,7 +413,7 @@ export function CreateTrainingPage({ navigation, route }: { navigation: any, rou
             borderRadius: 15,
         },
     });
-    const [showModal, setShowModal] = React.useState(true);
+    const [showModal, setShowModal] = React.useState(false);
 
   return (
     <ScrollView
