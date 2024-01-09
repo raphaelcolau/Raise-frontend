@@ -438,7 +438,10 @@ export function CreateTrainingPage({ navigation, route }: { navigation: any, rou
                         <StyledButton onPress={() => {
                             postCreateTraining(createTraining).then((res) => {
                                 dispatch(resetTraining());
-                                setShowModal(false)
+                                setShowModal(false);
+                                navigation.goBack();
+                            }).catch((err) => {
+                                console.log(err.response.data);
                             });
                         }}>
                             Ajouter
