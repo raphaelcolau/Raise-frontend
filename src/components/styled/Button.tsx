@@ -14,6 +14,7 @@ const ButtonWithTheme = ({ theme, style, ...props }: ButtonWithThemeProps) => {
             ...style,
             backgroundColor: colors.primary,
             borderRadius: 15,
+            overflow: 'hidden',
     });
 
     return (
