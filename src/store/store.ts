@@ -3,6 +3,7 @@ import authReducer from "./slice/authSlice";
 import currentDaySlice from "./slice/currentDaySlice";
 import trainingsSlice from "./slice/trainingsSlice";
 import createTrainingSlice from "./slice/createTrainingSlice";
+import forgotPwdSlice from "./slice/forgotPwdSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     currentDay: currentDaySlice,
     trainings: trainingsSlice,
     createTraining: createTrainingSlice,
+    forgotPwd: forgotPwdSlice.reducer,
   },
 });
 

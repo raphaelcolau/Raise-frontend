@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { useTheme } from '@react-navigation/native';
+import { Link } from '@react-navigation/native';
 import View from '../../components/styled/View';
 import Text from '../../components/styled/Text';
 import Button from '../../components/styled/Button';
@@ -13,7 +13,6 @@ import { setAccessToken, setRefreshToken } from '../../store/slice/authSlice';
 import { setIsAuthenticated } from '../../store/slice/authSlice';
 
 export default function Login({ navigation }: { navigation: any}) {
-    const theme = useTheme();
     const [secureText, setSecureText] = React.useState(true);
     const [username, setUsername] = React.useState('jean-sebastien');
     const [password, setPassword] = React.useState('Toto@123*');
@@ -128,7 +127,9 @@ export default function Login({ navigation }: { navigation: any}) {
                     onChangeText={(text) => setPassword(text)}
                     right={<TextInput.Icon icon={secureText ? "eye" : "eye-off"} onPress={() => handleSecureText()} />}
                 />
-                <Text style={styles.unableToConnect} variant="bodySmall">Je n'arrive pas à me connecter</Text>
+                <Link style={{textAlign: 'right'}} to="/ResetPwd">
+                    <Text style={styles.unableToConnect} variant="bodySmall">Je n'arrive pas à me connecter</Text>
+                </Link>
             </View>
 
             <View>

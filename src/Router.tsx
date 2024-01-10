@@ -6,6 +6,7 @@ import Register from "./app/register/pages";
 import { useSelector } from 'react-redux';
 import * as React from 'react';
 import { CreateTrainingPage } from './app/home/createTraining/pages';
+import ResetPwd from './app/resetpassword/Resetpwd';
 
 
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,7 @@ export default function Router() {
                 {isAuthenticated ? <Stack.Screen name="Home" component={Home} /> : null}
                 <Stack.Screen name="CreateTraining" component={CreateTrainingPage} />
                 <Stack.Screen name="Register" component={Register} />
+                <Stack.Screen name="ResetPwd" component={ResetPwd} />
             </Stack.Navigator>
         </NavigationContainer>
     );
