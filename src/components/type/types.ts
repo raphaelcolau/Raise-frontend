@@ -105,7 +105,7 @@ export type Series = {
     weight: number;
 }
 
-export interface CreateTrainingState {
+export interface CreateTrainingProps {
     name: string;
     description: string;
     trainingDays: Array<DAYS>;
