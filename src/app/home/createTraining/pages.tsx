@@ -13,28 +13,8 @@ import { resetTraining, setDescription, setEndDate, setHasStretching, setHasWarm
 import DatePicker from './DatePicker';
 import { postCreateTraining } from '../../../adapters/training/createTraining';
 import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
+import HeaderSubPage from '../../../components/headerSubPage/HeaderSubPage';
 
-function HeaderReturn({ navigation, route }: { navigation: any, route: any}) {
-    const styles = StyleSheet.create({
-        header: {
-            display: 'flex',
-            paddingLeft: 0,
-            padding: 10,
-        },
-    });
-    const dispatch = useDispatch();
-
-    return (
-        <StyledView style={styles.header}>
-            <StyledIconButton
-                icon="chevron-left"
-                size={30}
-                onPress={() => {navigation.goBack(); dispatch(resetTraining())}}
-            />
-        </StyledView>
-    )
-
-}
 
 function PresetInput() {
     const { colors } = useTheme();
@@ -383,7 +363,7 @@ export function CreateTrainingPage({ navigation, route }: { navigation: any, rou
   return (
     <ScrollView
         style={{flex: 1}}
-        StickyHeaderComponent={() => <HeaderReturn navigation={navigation} route={route} />} //TODO: Fix sticky header
+        StickyHeaderComponent={() => <HeaderSubPage navigation={navigation} route={route} />} //TODO: Fix sticky header
     >
         <Portal>
             <Modal visible={showModal} onDismiss={() => setShowModal(false)}>
@@ -417,7 +397,7 @@ export function CreateTrainingPage({ navigation, route }: { navigation: any, rou
             </Modal>
         </Portal>
         <StyledView style={styles.container}>
-            <HeaderReturn navigation={navigation} route={route} />
+            <HeaderSubPage navigation={navigation} route={route} />
             <StyledText variant="headlineSmall">Programmer une séance</StyledText>
 
             <PresetInput />
