@@ -6,8 +6,7 @@ import { IconButton, Icon, useTheme, Text, Modal, Portal, Surface, Button } from
 import StyledButton from '../../../components/styled/Button';
 import StyledTextInput from '../../../components/styled/TextInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetTraining, setDescription, setEndDate, setName, setStartDate, } from '../../../store/slice/createTrainingSlice';
-import DatePicker from './DatePicker';
+import { resetTraining, setDescription, setName, } from '../../../store/slice/createTrainingSlice';
 import { postCreateTraining } from '../../../adapters/training/createTraining';
 import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
 import HeaderSubPage from '../../../components/headerSubPage/HeaderSubPage';
@@ -15,64 +14,8 @@ import IconSelector from './IconSelector';
 import PresetInput from './PresetInput';
 import DayOfWeekInput from './DayOfWeek';
 import RemembersInput from './RemembersInput';
+import StartEndPicker from './StartAndEndPicker';
 
-
-
-function StartEndPicker() {
-    const [showStartDatePicker, setShowStartDatePicker] = React.useState(false);
-    const [showEndDatePicker, setShowEndDatePicker] = React.useState(false);
-    const dispatch = useDispatch();
-    const startDate = useSelector((state: any) => state.createTraining.startDate);
-    const endDate = useSelector((state: any) => state.createTraining.endDate);
-
-    const openStartDatePicker = () => {
-        setShowStartDatePicker(true);
-    };
-
-    const openEndDatePicker = () => {
-        setShowEndDatePicker(true);
-    };
-
-    const month = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', "Septembre", 'Octobre', 'Novembre', 'Décembre'];
-
-    return (
-        <View style={{display: 'flex', flexDirection: 'row', gap: 13, height: 70}}>
-            <Portal>
-                <Modal visible={showStartDatePicker} onDismiss={() => setShowStartDatePicker(false)}>
-                    <DatePicker dismiss={() => setShowStartDatePicker(false)} mode='startDate' />
-                </Modal>
-
-                <Modal visible={showEndDatePicker} onDismiss={() => setShowEndDatePicker(false)}>
-                    <DatePicker dismiss={() => setShowEndDatePicker(false)} mode='endDate' />
-                </Modal>
-            </Portal>
-
-            <TouchableOpacity 
-                style={{flex: 1}}
-                onPress={openStartDatePicker}
-                onLongPress={() => dispatch(setStartDate(''))}
-            >
-                <ModalInput
-                    label="Débuter"
-                    value={startDate ? `${new Date(startDate).getDate()} ${month[new Date(startDate).getMonth()]} ${new Date(startDate).getFullYear()}` : "Aujourd'hui"}
-                    style={{flex: 1}}
-                />
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-                style={{flex: 1}}
-                onPress={openEndDatePicker}
-                onLongPress={() => dispatch(setEndDate(''))}
-            >
-                <ModalInput
-                    label="Terminer"
-                    value={endDate ? `${new Date(endDate).getDate()} ${month[new Date(endDate).getMonth()]} ${new Date(endDate).getFullYear()}` : "Jamais"}
-                    style={{flex: 1}}
-                />
-            </TouchableOpacity>
-        </View>
-    )
-}
 
 export function CreateTrainingPage({ navigation, route }: { navigation: any, route: any}) {
     const { colors } = useTheme();
