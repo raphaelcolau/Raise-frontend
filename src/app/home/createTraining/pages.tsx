@@ -14,24 +14,8 @@ import { postCreateTraining } from '../../../adapters/training/createTraining';
 import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
 import HeaderSubPage from '../../../components/headerSubPage/HeaderSubPage';
 import IconSelector from './IconSelector';
+import PresetInput from './PresetInput';
 
-
-function PresetInput() {
-    const { colors } = useTheme();
-
-    return (
-        <ModalInput 
-            value="Musculation"
-            label="Pré-réglage"
-            right={
-                <Icon
-                    source="menu-down"
-                    size={30}
-                />
-            }
-        />
-    )
-}
 
 function StyledRoundSwitch({value, label, style, onPress, selected, ...props}: {value: boolean, label: string, style?: any, props?: any, onPress?: Function, selected?: boolean}) {
     const { colors } = useTheme();
