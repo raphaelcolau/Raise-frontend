@@ -5,10 +5,8 @@ import StyledText from '../../../components/styled/Text';
 import { IconButton, Icon, useTheme, Text, Modal, Portal, Surface, Button } from 'react-native-paper';
 import StyledButton from '../../../components/styled/Button';
 import StyledTextInput from '../../../components/styled/TextInput';
-import { DAYS } from '../../../components/type/types';
-import Chip from '../../../components/styled/Chip';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetTraining, setDescription, setEndDate, setHasStretching, setHasWarmUp, setName, setStartDate, setTrainingDays } from '../../../store/slice/createTrainingSlice';
+import { resetTraining, setDescription, setEndDate, setName, setStartDate, } from '../../../store/slice/createTrainingSlice';
 import DatePicker from './DatePicker';
 import { postCreateTraining } from '../../../adapters/training/createTraining';
 import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
@@ -19,42 +17,6 @@ import DayOfWeekInput from './DayOfWeek';
 import RemembersInput from './RemembersInput';
 
 
-function RemembersInput() {
-    const { colors } = useTheme();
-    const hasWarmUp = useSelector((state: any) => state.createTraining.hasWarmUp);
-    const hasStretching = useSelector((state: any) => state.createTraining.hasStretching);
-    const dispatch = useDispatch();
-
-    return (
-        <View style={{display: 'flex', gap: 13}}>
-            <Text variant="titleMedium">Rappel pendant la séance</Text>
-            
-            <View style={{display: 'flex', flexDirection: 'row', gap: 13}}>
-                
-                    <Chip 
-                        selected={hasWarmUp}
-                        icon={hasWarmUp ? 'check' : undefined}
-                        onPress={() => {
-                            dispatch(setHasWarmUp(!hasWarmUp));
-                        }}
-                    >
-                        Échauffement
-                    </Chip>
-
-                    <Chip 
-                        selected={hasStretching}
-                        icon={hasStretching ? 'check' : undefined}
-                        onPress={() => {
-                            dispatch(setHasStretching(!hasStretching));
-                        }}
-                    >
-                        Étirement
-                    </Chip>
-            </View>
-
-        </View>
-    )
-}
 
 function StartEndPicker() {
     const [showStartDatePicker, setShowStartDatePicker] = React.useState(false);
