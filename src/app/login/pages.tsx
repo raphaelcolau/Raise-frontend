@@ -18,6 +18,7 @@ export default function Login({ navigation }: { navigation: any}) {
     const [password, setPassword] = React.useState('Toto@123*');
     const [error, setError] = React.useState<string | null>(null);
     const [inputError, setInputError] = React.useState<string | null>(null);
+    const [loading, setLoading] = React.useState<boolean>(false);
     const dispatch = useDispatch();
 
     const styles = StyleSheet.create({
@@ -72,6 +73,7 @@ export default function Login({ navigation }: { navigation: any}) {
         } else {
             setError(null);
             setInputError(null);
+            setLoading(true);
             postSignIn({username: username.trim(), password}).then((res) => {
                 const data: SignInPropsRes = res;
                 if (data.success) {
@@ -81,12 +83,14 @@ export default function Login({ navigation }: { navigation: any}) {
                     setError(null);
                     setInputError(null);
                     setSecureText(true);
+                    setLoading(false);
 
                     dispatch(setRefreshToken(String(data.data?.refreshToken)));
                     dispatch(setAccessToken(String(data.data?.accessToken)));
                     dispatch(setIsAuthenticated(true));
                     navigation.navigate('Home');
                 } else {
+                    setLoading(false);
                     setError(String(data.message));
                 }
             });
@@ -133,7 +137,11 @@ export default function Login({ navigation }: { navigation: any}) {
             </View>
 
             <View>
-                <Button onPress={() => validForm()}>
+                <Button 
+                    onPress={() => validForm()}
+                    loading={loading}
+                    disabled={loading}
+                >
                     Se connecter
                 </Button>
             </View>
