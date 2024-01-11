@@ -4,6 +4,7 @@ interface ForgotPwdState {
   email: string;
   isEmailSent: boolean;
   isEmailSending: boolean;
+  token: string;
   retryDelay: number;
   emailError: string;
 }
@@ -12,6 +13,7 @@ const initialState: ForgotPwdState = {
   email: '',
   isEmailSent: false,
   isEmailSending: false,
+  token: '',
   retryDelay: 0,
   emailError: '',
 };
@@ -35,6 +37,9 @@ const forgotPwdSlice = createSlice({
     setEmailError(state, action: PayloadAction<string>) {
       state.emailError = action.payload;
     },
+    setPwdToken(state, action: PayloadAction<string>) {
+        state.token = action.payload;
+    },
   },
 });
 
@@ -43,6 +48,7 @@ export const {
   setIsEmailSent,
   setIsEmailSending,
   setRetryDelay,
+  setPwdToken,
   setEmailError,
 } = forgotPwdSlice.actions;
 export default forgotPwdSlice;
