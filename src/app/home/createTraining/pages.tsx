@@ -3,7 +3,6 @@ import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'reac
 import StyledView from '../../../components/styled/View';
 import StyledText from '../../../components/styled/Text';
 import { IconButton, Icon, useTheme, Text, Modal, Portal, Surface, Button } from 'react-native-paper';
-import { StyledIconButton } from '../../../components/styled/IconButton';
 import StyledButton from '../../../components/styled/Button';
 import StyledTextInput from '../../../components/styled/TextInput';
 import { DAYS } from '../../../components/type/types';
