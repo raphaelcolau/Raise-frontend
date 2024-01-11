@@ -15,73 +15,9 @@ import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
 import HeaderSubPage from '../../../components/headerSubPage/HeaderSubPage';
 import IconSelector from './IconSelector';
 import PresetInput from './PresetInput';
+import DayOfWeekInput from './DayOfWeek';
+import RemembersInput from './RemembersInput';
 
-
-function StyledRoundSwitch({value, label, style, onPress, selected, ...props}: {value: boolean, label: string, style?: any, props?: any, onPress?: Function, selected?: boolean}) {
-    const { colors } = useTheme();
-    const color = selected ? colors.primary : colors.onSurface;
-    const styles = StyleSheet.create({
-        container: {
-            width: 45,
-            aspectRatio: 1,
-            backgroundColor: colors.surface,
-            borderColor: colors.primary,
-            borderWidth: selected ? 1 : 0,
-            borderRadius: 100,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        }
-    });
-    
-    return (
-        <TouchableOpacity onPress={() => onPress && onPress()}>
-            <View style={{...styles.container, ...style}}>
-                <Text style={{color: color}}>{label}</Text>
-            </View>
-        </TouchableOpacity>
-    )
-
-}
-
-function DayOfWeekInput() {
-    // const [selectedDays, setSelectedDays] = React.useState<DAYS[]>([]);
-    const selectedDays = useSelector((state: any) => state.createTraining.trainingDays);
-    const dispatch = useDispatch();
-    const { colors } = useTheme();
-    const days = [
-        {label: 'Lun', value: DAYS.MONDAY},
-        {label: 'Mar', value: DAYS.TUESDAY},
-        {label: 'Mer', value: DAYS.WEDNESDAY},
-        {label: 'Jeu', value: DAYS.THURSDAY},
-        {label: 'Ven', value: DAYS.FRIDAY},
-        {label: 'Sam', value: DAYS.SATURDAY},
-        {label: 'Dim', value: DAYS.SUNDAY},
-    ]
-
-    return (
-        <View style={{display: 'flex', flexDirection: 'column', gap: 15}}>
-            <Text variant="titleMedium">Jour(s) de séance</Text>
-            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                {days.map((day) => (
-                    <StyledRoundSwitch
-                        key={day.value}
-                        value={selectedDays.includes(day.value)}
-                        label={day.label}
-                        selected={selectedDays.includes(day.value)}
-                        onPress={() => {
-                            if (selectedDays.includes(day.value)) {
-                                dispatch(setTrainingDays(selectedDays.filter((d: DAYS) => d !== day.value)));
-                            } else {
-                                dispatch(setTrainingDays([...selectedDays, day.value]));
-                            }
-                        }}
-                    />
-                ))}
-            </View>
-        </View>
-    )
-}
 
 function RemembersInput() {
     const { colors } = useTheme();
