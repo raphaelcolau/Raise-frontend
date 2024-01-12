@@ -1,13 +1,12 @@
 import React from 'react';
-import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import StyledView from '../../../components/styled/View';
 import StyledText from '../../../components/styled/Text';
-import { IconButton, Icon, useTheme, Text, Modal, Portal, Surface, Button } from 'react-native-paper';
+import { Icon, useTheme, Modal, Portal } from 'react-native-paper';
 import StyledButton from '../../../components/styled/Button';
 import StyledTextInput from '../../../components/styled/TextInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetTraining, setDescription, setName, } from '../../../store/slice/createTrainingSlice';
-import { postCreateTraining } from '../../../adapters/training/createTraining';
+import { setDescription, setName, } from '../../../store/slice/createTrainingSlice';
 import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
 import HeaderSubPage from '../../../components/headerSubPage/HeaderSubPage';
 import IconSelector from './_components/IconSelector';
@@ -15,62 +14,7 @@ import PresetInput from './_components/PresetInput';
 import DayOfWeekInput from './_components/DayOfWeek';
 import RemembersInput from './_components/RemembersInput';
 import StartEndPicker from './_components/StartAndEndPicker';
-
-
-function ModalAddTrainingContent({ navigation, route, setShowModal }: { navigation: any, route: any, setShowModal: Function}) {
-    const dispatch = useDispatch();
-    const { colors } = useTheme();
-    const createTraining = useSelector((state: any) => state.createTraining);
-
-    const styles = StyleSheet.create({
-        modal: {
-            display: 'flex',
-            backgroundColor: colors.surface,
-            padding: 10,
-            borderRadius: 15,
-        },
-    });
-
-    return (
-    <Surface style={styles.modal}>
-
-        <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-            <Text variant="titleLarge" style={{color: colors.primary}}>Séance ajoutée</Text>
-            <IconButton icon='close' onPress={() => setShowModal(false)} />
-        </View>
-
-        <View style={{marginTop: -15}}>
-            <Text variant="headlineSmall">Ajouter des exercises ?</Text>
-            <Text variant="bodyMedium" style={{marginTop: 15, marginBottom: 25}}>Vous pouvez dès à présent ajouter des exercices à votre séance nouvellement crée.</Text>
-        </View>
-
-        <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', gap: 10}}>
-
-            <Button mode="text" textColor={colors.onSurface} 
-                onPress={() => {
-                    postCreateTraining(createTraining).then((res) => {
-                        dispatch(resetTraining());
-                        setShowModal(false);
-                        navigation.goBack();
-                    }).catch((err) => {
-                        console.log(err.response.data);
-                    });
-                }}
-            >
-                    Ajouter plus tard
-            </Button>
-
-            <StyledButton 
-                onPress={() => setShowModal(false)}
-            >
-                Ajouter
-            </StyledButton>
-
-        </View>
-
-    </Surface>
-    )
-}
+import ModalAddTrainingContent from './_components/ModalAddTrainingContent';
 
 export function CreateTrainingPage({ navigation, route }: { navigation: any, route: any}) {
     const { colors } = useTheme();
