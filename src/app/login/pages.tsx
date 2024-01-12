@@ -142,7 +142,7 @@ export default function Login({ navigation }: { navigation: any}) {
                     loading={loading}
                     disabled={loading}
                 >
-                    Se connecter
+                    {loading ? 'Connexion' : 'Se connecter'}
                 </Button>
             </View>
 
