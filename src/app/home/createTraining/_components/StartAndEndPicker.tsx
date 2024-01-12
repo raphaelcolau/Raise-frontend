@@ -2,9 +2,9 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Modal, Portal} from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { setEndDate, setStartDate, } from '../../../store/slice/createTrainingSlice';
+import { setEndDate, setStartDate, } from '../../../../store/slice/createTrainingSlice';
 import DatePicker from './DatePicker';
-import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
+import ModalInput from '../../../../components/PlaceHolderInput/PlaceHolderInput';
 
 export default function StartEndPicker() {
     const [showStartDatePicker, setShowStartDatePicker] = React.useState(false);

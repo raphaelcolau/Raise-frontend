@@ -4,8 +4,8 @@ import { IconButton, useTheme, Text } from 'react-native-paper';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { DAYS, Training } from '../../../components/type/types';
-import { setEndDate, setStartDate } from '../../../store/slice/createTrainingSlice';
+import { DAYS, Training } from '../../../../components/type/types';
+import { setEndDate, setStartDate } from '../../../../store/slice/createTrainingSlice';
 
 LocaleConfig.locales['fr'] = {
     monthNames: [

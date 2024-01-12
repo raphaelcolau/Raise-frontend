@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon, useTheme } from 'react-native-paper';
-import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
+import ModalInput from '../../../../components/PlaceHolderInput/PlaceHolderInput';
 
 export default function PresetInput() {
     const { colors } = useTheme();

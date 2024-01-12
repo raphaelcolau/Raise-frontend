@@ -1,9 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useTheme, Text } from 'react-native-paper';
-import { DAYS } from '../../../components/type/types';
+import { DAYS } from '../../../../components/type/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTrainingDays } from '../../../store/slice/createTrainingSlice';
+import { setTrainingDays } from '../../../../store/slice/createTrainingSlice';
 import StyledRoundSwitch from './StyledRoundSwitch';
 
 export default function DayOfWeekInput() {

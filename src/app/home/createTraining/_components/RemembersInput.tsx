@@ -1,9 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useTheme, Text } from 'react-native-paper';
-import Chip from '../../../components/styled/Chip';
+import Chip from '../../../../components/styled/Chip';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHasStretching, setHasWarmUp } from '../../../store/slice/createTrainingSlice';
+import { setHasStretching, setHasWarmUp } from '../../../../store/slice/createTrainingSlice';
 
 export default function RemembersInput() {
     const { colors } = useTheme();

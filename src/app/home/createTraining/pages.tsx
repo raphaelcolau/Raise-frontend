@@ -10,11 +10,11 @@ import { resetTraining, setDescription, setName, } from '../../../store/slice/cr
 import { postCreateTraining } from '../../../adapters/training/createTraining';
 import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
 import HeaderSubPage from '../../../components/headerSubPage/HeaderSubPage';
-import IconSelector from './IconSelector';
-import PresetInput from './PresetInput';
-import DayOfWeekInput from './DayOfWeek';
-import RemembersInput from './RemembersInput';
-import StartEndPicker from './StartAndEndPicker';
+import IconSelector from './_components/IconSelector';
+import PresetInput from './_components/PresetInput';
+import DayOfWeekInput from './_components/DayOfWeek';
+import RemembersInput from './_components/RemembersInput';
+import StartEndPicker from './_components/StartAndEndPicker';
 
 
 function ModalAddTrainingContent({ navigation, route, setShowModal }: { navigation: any, route: any, setShowModal: Function}) {

@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { IconButton, Icon, useTheme, Text, Modal, Portal, Surface, Button } from 'react-native-paper';
-import StyledButton from '../../../components/styled/Button';
+import StyledButton from '../../../../components/styled/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIconHexadecimalColor, setIconName } from '../../../store/slice/createTrainingSlice';
-import ModalInput from '../../../components/PlaceHolderInput/PlaceHolderInput';
+import { setIconHexadecimalColor, setIconName } from '../../../../store/slice/createTrainingSlice';
+import ModalInput from '../../../../components/PlaceHolderInput/PlaceHolderInput';
 
 export default function IconSelector() {
     const [showModal, setShowModal] = React.useState(false);
