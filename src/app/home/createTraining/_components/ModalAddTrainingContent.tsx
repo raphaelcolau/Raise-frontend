@@ -50,7 +50,15 @@ export default function ModalAddTrainingContent({ navigation, route, setShowModa
             </Button>
 
             <StyledButton 
-                onPress={() => setShowModal(false)}
+                onPress={() => {
+                    postCreateTraining(createTraining).then((res) => {
+                        dispatch(resetTraining());
+                        setShowModal(false);
+                        navigation.navigate('AddTrainingSessionExercise', {id: res.data.id});
+                    }).catch((err) => {
+                        console.log(err.response.data);
+                    });
+                }}
             >
                 Ajouter
             </StyledButton>
