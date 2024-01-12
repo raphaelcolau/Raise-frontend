@@ -117,3 +117,9 @@ export interface TrainingProps {
     iconName: string;
     iconHexadecimalColor: string;
 };
+
+export interface AddExerciseProps {
+    numberOfWarmUpSeries: number;
+    notes: string;
+    series: Array<Series>;
+}

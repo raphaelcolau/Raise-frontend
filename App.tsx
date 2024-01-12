@@ -6,6 +6,7 @@ import Router from './src/Router';
 import { interceptor } from './src/adapters/interceptor';
 import { Provider } from 'react-redux';
 import store from './src/store/store';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const darktheme = {
   ...MD3DarkTheme,
@@ -33,12 +34,14 @@ export default function Main() {
   const barStyle: StatusBarStyle = 'light-content';
 
   return (
-    <Provider store={store}>
-      <PaperProvider theme={darktheme}>
-        <StatusBar barStyle={barStyle} backgroundColor={darktheme.colors.background} />
-        <Router />
-      </PaperProvider>
-    </Provider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <Provider store={store}>
+        <PaperProvider theme={darktheme}>
+          <StatusBar barStyle={barStyle} backgroundColor={darktheme.colors.background} />
+          <Router />
+        </PaperProvider>
+      </Provider>
+    </GestureHandlerRootView>
   );
 }
 
