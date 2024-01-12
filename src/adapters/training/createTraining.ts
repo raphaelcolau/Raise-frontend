@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { API_URL } from '../api';
-import { CreateTrainingProps } from '../../components/type/types';
+import { TrainingProps } from '../../components/type/types';
 
-export const postCreateTraining = async (props: CreateTrainingProps) => {
+export const postCreateTraining = async (props: TrainingProps) => {
   const response = await axios.post(`${API_URL}/api/training`, {
     name: props.name,
     description: props.description,

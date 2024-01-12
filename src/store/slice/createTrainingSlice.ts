@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { DAYS } from '../../components/type/types';
-import  { CreateTrainingProps } from '../../components/type/types';
+import  { TrainingProps } from '../../components/type/types';
 
-const initialState: CreateTrainingProps = {
+const initialState: TrainingProps = {
     name: '',
     description: '',
     trainingDays: [],
