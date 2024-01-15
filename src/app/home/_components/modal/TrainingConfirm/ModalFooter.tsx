@@ -6,7 +6,7 @@ import StyledButton from '../../../../../components/styled/Button';
 import { ValidateTrainingSessionProps, validateTrainingSession } from '../../../../../adapters/training/validateTrainingSession';
 import { useSelector } from 'react-redux';
 
-export default function ModalConfirmFooter({activity, dismiss}: {activity: Training, dismiss: Function}) {
+export default function ModalConfirmFooter({activity, dismiss, navigation}: {activity: Training, dismiss: Function, navigation: any}) {
     const theme = useTheme();
     const currentDay: string = useSelector((state: any) => state.currentDay.day);
     const styles = StyleSheet.create({
@@ -28,10 +28,15 @@ export default function ModalConfirmFooter({activity, dismiss}: {activity: Train
             dismiss(false);
         });
     }
+
+    const handleModifyAndValidate = () => {
+        dismiss(false);
+        navigation("PerformManuallyTrainingSession")
+    }
     
     return (
         <View style={styles.container}>
-            <Button mode="text" textColor={theme.colors.onSurface}>Modifier et valider</Button>
+            <Button mode="text" textColor={theme.colors.onSurface} onPress={handleModifyAndValidate}>Modifier et valider</Button>
             <StyledButton onPress={handleValidate}>Valider</StyledButton>
         </View>
     )

@@ -41,11 +41,15 @@ export default function InlineCalendar({navigation, route}: {navigation: any, ro
         },
     });
 
+    const handleNavigate = (route: string) => {
+        navigation.navigate(route);
+    }
+
     return (
         <StyledView style={styles.container}>
             <Text variant="titleMedium">Au programme aujourd'hui</Text>
             
-            {activityList.map((activity: Training) => (<Activity key={activity.trainingId} activity={activity} />))}
+            {activityList.map((activity: Training) => (<Activity key={activity.trainingId} activity={activity} navigation={handleNavigate} />))}
 
             <Button
                 icon='plus'

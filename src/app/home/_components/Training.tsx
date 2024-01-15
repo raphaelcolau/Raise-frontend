@@ -10,7 +10,7 @@ import ModalContent from './modal/TrainingSessionDetails/ModalContent';
 import ModalConfirmHeader from './modal/TrainingConfirm/ModalHeader';
 import ModalConfirmFooter from './modal/TrainingConfirm/ModalFooter';
 
-export default function Activity({activity}: {activity: Training}) {
+export default function Activity({activity, navigation}: {activity: Training, navigation: any}) {
     const theme = useTheme();
     const [isVisibleDetails, setIsVisibleDetails] = React.useState(false);
     const [isVisibleConfirm, setIsVisibleConfirm] = React.useState(false);
@@ -33,8 +33,6 @@ export default function Activity({activity}: {activity: Training}) {
         },
     });
 
-    
-
     return (
         <View>
 
@@ -50,7 +48,7 @@ export default function Activity({activity}: {activity: Training}) {
 
                     <ModalConfirmHeader activity={activity} dismiss={setIsVisibleConfirm} />
                     <Text variant="bodyLarge" style={{fontFamily: 'sans-serif-light'}}>Vous vous apprêtez à valider votre séance en cliquant sur l’un des boutons ci-dessous</Text>
-                    <ModalConfirmFooter activity={activity} dismiss={setIsVisibleConfirm} />
+                    <ModalConfirmFooter activity={activity} dismiss={setIsVisibleConfirm} navigation={navigation} />
 
                 </Surface>
             </Modal>
