@@ -62,7 +62,7 @@ export default function SeriesManagement({ series, setSeries }: { series: Series
 
         newItems.forEach((item, index) => {
             item.id = index + 1;
-            item.positionIndex = index;
+            item.positionIndex = index + 1;
         })
 
         setSeries(newItems);
