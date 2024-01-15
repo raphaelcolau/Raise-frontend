@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Text, useTheme, Icon, Button } from "react-native-paper";
+import { Text, useTheme, Icon, Button, TextInput as TextInputPaper } from "react-native-paper";
 import HeaderSubPage from "../../components/headerSubPage/HeaderSubPage";
 import ModalInput from '../../components/PlaceHolderInput/PlaceHolderInput';
 import { getTrainingByID } from "../../adapters/training/getTrainingByID";
@@ -11,7 +11,7 @@ import DragList, {DragListRenderItemInfo} from 'react-native-draglist';
 
 
 
-function SerieComponent({ serie, isActive }: { serie: Series, isActive?: boolean }) {
+function SerieComponent({ serie, isActive, setSerieValues }: { serie: Series, isActive?: boolean, setSerieValues: Function }) {
     const [active, setActive] = useState<boolean>(isActive ? isActive : false);
     const theme = useTheme();
     const { colors } = theme;
@@ -87,6 +87,15 @@ function SerieComponent({ serie, isActive }: { serie: Series, isActive?: boolean
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
+        },
+        input: {
+            paddingHorizontal: 10,
+            paddingRight: 15,
+            paddingVertical: 10,
+            paddingStart: 0,
+            margin: 0,
+            width: 50,
+            height: 20,
         }
     });
 
@@ -94,7 +103,7 @@ function SerieComponent({ serie, isActive }: { serie: Series, isActive?: boolean
         setActive(isActive ? isActive : false)
     }, [isActive])
 
-    const Field = ({children}: {children: React.ReactNode}) => {
+    const Field = ({serie, value, keyS, setSerieValues}: {serie: Series, value: string | number, keyS?: keyof Series, setSerieValues: Function}) => {
         return (
             <View
                 style={{
@@ -102,17 +111,18 @@ function SerieComponent({ serie, isActive }: { serie: Series, isActive?: boolean
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: 5,
+                    gap: 3,
                     backgroundColor: colors.surface,
-                    padding: 12,
                     minWidth: 50,
                     borderRadius: 10,
                 }}
             >
-                <Text variant="titleSmall" style={{
-                }}> 
-                    {children}
-                </Text>
+                <TextInput
+                    style={styles.input}
+                    value={String(value)}
+                    keyboardType="numeric"
+                    onChangeText={(text) => keyS && setSerieValues(serie.id, keyS, text)}
+                />
                 <Icon source="menu-down" size={25} />
             </View>
         )
@@ -123,10 +133,10 @@ function SerieComponent({ serie, isActive }: { serie: Series, isActive?: boolean
         <View style={styles.container}>
             <Text variant="bodySmall" style={{color: colors.onSurface, marginTop: -5}}>{serieName[serie.positionIndex]}</Text>
             <View style={styles.inputContainer}>
-                <Field>{serie.repsCount}</Field>
-                <Field>1:0:1</Field>
-                <Field>{serie.restTime}</Field>
-                <Field>{serie.weight} kg</Field>
+                <Field serie={serie} keyS='repsCount' value={serie.repsCount} setSerieValues={setSerieValues} />
+                <Field serie={serie} value={'1:0:1'} setSerieValues={setSerieValues} />
+                <Field serie={serie} keyS='restTime' value={serie.restTime} setSerieValues={setSerieValues} />
+                <Field serie={serie} keyS='weight' value={serie.weight} setSerieValues={setSerieValues} />
             </View>
         </View>
     )
@@ -156,6 +166,16 @@ function SeriesManagement({ series, setSeries }: { series: Series[], setSeries: 
         },
     });
 
+    const changeValueBySerieID = (id: number, field: string, value: string | number) => {
+        const newSeries = [...series];
+        const serie: Series | undefined = newSeries.find((serie) => serie.id === id);
+        if (serie) {
+            if (field in serie) {
+                serie[field as keyof Series] = value as never;
+            }
+        }
+        setSeries(newSeries);
+    }
 
     function renderItem(info: DragListRenderItemInfo<Series>) {
         const { item, isActive, onDragEnd, onDragStart } = info;
@@ -166,7 +186,7 @@ function SeriesManagement({ series, setSeries }: { series: Series[], setSeries: 
                 onPressOut={onDragEnd}
                 disabled={isActive}
             >
-                <SerieComponent serie={item} isActive={isActive} />
+                <SerieComponent serie={item} isActive={isActive} setSerieValues={changeValueBySerieID}  />
             </Pressable>
         )
     
@@ -182,7 +202,6 @@ function SeriesManagement({ series, setSeries }: { series: Series[], setSeries: 
             item.positionIndex = index;
         })
 
-        console.log(newItems)
         setSeries(newItems);
     }
 
@@ -224,7 +243,7 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
     const [training, setTraining] = useState<TrainingProps | null>(null);
     const trainingID = id ? id : route.params.id;
     const [series, setSeries] = useState<Series[]>([
-        {completed: false, repsCount: 12, restTime: '2m30', weight: 20, id: 1, positionIndex: 0},
+        {completed: false, repsCount: 12, restTime: '2:30', weight: 20, id: 1, positionIndex: 0},
     ]);
     const [note, setNote] = useState<string>('');
 
