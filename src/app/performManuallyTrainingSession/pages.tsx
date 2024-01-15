@@ -4,10 +4,18 @@ import { Button, Icon, Text, useTheme } from 'react-native-paper';
 import HeaderSubPage from '../../components/headerSubPage/HeaderSubPage';
 import { Training, Exercise } from '../../components/type/types';
 import StyledButton from '../../components/styled/Button';
+import { useSelector } from 'react-redux';
 
-function ExerciseMenu({isActive, exercise, setSelected}: {isActive: boolean, exercise: Exercise, setSelected: Function}) {
+function ExerciseMenu({isActive, exercise, setSelected, training}: {isActive: boolean, exercise: Exercise, setSelected: Function, training: Training}) {
     const theme = useTheme();
     const { colors } = theme;
+
+    const newTraining = {...training};
+    const savedTraining = useSelector((state: any) => state.trainings.saved);
+    const currentDay = new Date(useSelector((state: any) => state.currentDay.day));
+    const formattedDate = `${currentDay.getFullYear()}-${String(currentDay.getMonth() + 1).padStart(2, '0')}-${String(currentDay.getDate()).padStart(2, '0')}`;
+
+    // console.log(savedTraining[formattedDate])
 
     const styles = StyleSheet.create({
         container: {
@@ -126,7 +134,15 @@ export default function PerformManuallyTrainingSession({ navigation, route }: { 
                 </View>
 
                 <View style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 15}}>
-                    {training.trainingExercises.map((exercise: Exercise) => (<ExerciseMenu key={exercise.exerciseId} isActive={selected === exercise.exerciseId} setSelected={handleSetSelected} exercise={exercise} />))}
+                    {training.trainingExercises.map((exercise: Exercise) => (
+                        <ExerciseMenu 
+                            key={exercise.exerciseId}
+                            isActive={selected === exercise.exerciseId}
+                            setSelected={handleSetSelected}
+                            exercise={exercise}
+                            training={training}
+                        />
+                    ))}
                 </View>
 
                 <StyledButton
