@@ -147,7 +147,7 @@ function SeriesManagement({ series, setSeries }: { series: Series[], setSeries: 
         },
         listView: {
             width: '100%',
-            height: 200,
+            // height: 200,
         },
         listContent: {
             display: 'flex',
@@ -176,6 +176,13 @@ function SeriesManagement({ series, setSeries }: { series: Series[], setSeries: 
         const newItems = [...series];
         const item = newItems.splice(fromIndex, 1)[0];
         newItems.splice(toIndex, 0, item);
+
+        newItems.forEach((item, index) => {
+            item.id = index + 1;
+            item.positionIndex = index;
+        })
+
+        console.log(newItems)
         setSeries(newItems);
     }
 
@@ -219,18 +226,19 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
     const [series, setSeries] = useState<Series[]>([
         {completed: false, repsCount: 12, restTime: '2m30', weight: 20, id: 1, positionIndex: 0},
     ]);
+    const [note, setNote] = useState<string>('');
 
     const styles = StyleSheet.create({
         container: {
             position: 'relative',
             width: '100%',
-            height: '100%',
-            overflow: 'hidden',
+            padding: 10,
+            backgroundColor: colors.background,
+        },
+        content: {
             display: 'flex',
             flexDirection: 'column',
             gap: 13,
-            padding: 10,
-            backgroundColor: colors.background,
         },
     });
 
@@ -249,55 +257,60 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
     }
 
     return (
-        <View style={styles.container}>
-            <HeaderSubPage navigation={navigation} route={route} />
-            <Text variant="headlineSmall" >Ajouter des exercices</Text>
-            <Text variant="titleMedium" style={{marginTop: -13, marginBottom: 15}}>Séance {training?.name}</Text>
+        <ScrollView style={styles.container}>
+            <View style={styles.content}>
 
-            <ModalInput
-                value="Choisir un exercice"
-                label="Exercice"
-                right={
-                    <Icon
-                        source="menu-down"
-                        size={30}
-                    />
-                }
-            />
+                <HeaderSubPage navigation={navigation} route={route} />
+                <Text variant="headlineSmall" >Ajouter des exercices</Text>
+                <Text variant="titleMedium" style={{marginTop: -13, marginBottom: 15}}>Séance {training?.name}</Text>
 
-            <ModalInput
-                value="Série dégressive"
-                label="Modèle"
-                right={
-                    <Icon
-                        source="menu-down"
-                        size={30}
-                    />
-                }
-            />
+                <ModalInput
+                    value="Choisir un exercice"
+                    label="Exercice"
+                    right={
+                        <Icon
+                            source="menu-down"
+                            size={30}
+                        />
+                    }
+                />
 
-            <SeriesManagement series={series} setSeries={setSeries} />
+                <ModalInput
+                    value="Série dégressive"
+                    label="Modèle"
+                    right={
+                        <Icon
+                            source="menu-down"
+                            size={30}
+                        />
+                    }
+                />
 
-            <Button
-                onPress={duplicateLastSerie}
-                icon="plus"
-            >
-                Ajouter une série
-            </Button>
+                <SeriesManagement series={series} setSeries={setSeries} />
 
-            <TextInput
-                label="Notes"
-                multiline={true}
-                placeholder="Ajouter des notes"
-            />
+                <Button
+                    onPress={duplicateLastSerie}
+                    icon="plus"
+                >
+                    Ajouter une série
+                </Button>
 
-            <StyledButton
-                style={{marginTop: 10}}
-                icon='play'
-            >
-                Ajouter l'exercice
-            </StyledButton>
+                <TextInput
+                    label="Notes"
+                    multiline={true}
+                    value={note}
+                    onChangeText={setNote}
+                    placeholder="Ajouter des notes"
+                />
 
-        </View>
+                <StyledButton
+                    style={{marginTop: 10}}
+                    icon='play'
+                >
+                    Ajouter l'exercice
+                </StyledButton>
+            </View>
+
+        </ScrollView>
     )
 }
