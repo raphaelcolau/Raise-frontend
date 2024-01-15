@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, ScrollView, StyleSheet, Touchable, View } from "react-native";
-import { Text, useTheme, Icon } from "react-native-paper";
+import { FlatList, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Text, useTheme, Icon, Button } from "react-native-paper";
 import HeaderSubPage from "../../components/headerSubPage/HeaderSubPage";
 import ModalInput from '../../components/PlaceHolderInput/PlaceHolderInput';
 import { getTrainingByID } from "../../adapters/training/getTrainingByID";
 import { Series, TrainingProps } from '../../components/type/types';
 import StyledButton from "../../components/styled/Button";
 import TextInput from "../../components/styled/TextInput";
-import { DraxProvider, DraxView } from 'react-native-drax';
+import DragList, {DragListRenderItemInfo} from 'react-native-draglist';
 
 
-function SerieComponent({ serie }: { serie: Series }) {
-    const [active, setActive] = useState<boolean>(false);
+
+function SerieComponent({ serie, isActive }: { serie: Series, isActive?: boolean }) {
+    const [active, setActive] = useState<boolean>(isActive ? isActive : false);
     const theme = useTheme();
     const { colors } = theme;
     const serieName = [
@@ -89,6 +90,10 @@ function SerieComponent({ serie }: { serie: Series }) {
         }
     });
 
+    useEffect(() => {
+        setActive(isActive ? isActive : false)
+    }, [isActive])
+
     const Field = ({children}: {children: React.ReactNode}) => {
         return (
             <View
@@ -115,20 +120,15 @@ function SerieComponent({ serie }: { serie: Series }) {
 
 
     return (
-        <Pressable
-            onPressIn={() => setActive(true)}
-            onPressOut={() => setActive(false)}
-        >
-            <View style={styles.container}>
-                <Text variant="bodySmall" style={{color: colors.onSurface, marginTop: -5}}>{serieName[serie.positionIndex]}</Text>
-                <View style={styles.inputContainer}>
-                    <Field>{serie.repsCount}</Field>
-                    <Field>1:0:1</Field>
-                    <Field>{serie.restTime}</Field>
-                    <Field>{serie.weight} kg</Field>
-                </View>
+        <View style={styles.container}>
+            <Text variant="bodySmall" style={{color: colors.onSurface, marginTop: -5}}>{serieName[serie.positionIndex]}</Text>
+            <View style={styles.inputContainer}>
+                <Field>{serie.repsCount}</Field>
+                <Field>1:0:1</Field>
+                <Field>{serie.restTime}</Field>
+                <Field>{serie.weight} kg</Field>
             </View>
-        </Pressable>
+        </View>
     )
 }
 
@@ -148,8 +148,6 @@ function SeriesManagement({ series, setSeries }: { series: Series[], setSeries: 
         listView: {
             width: '100%',
             height: 200,
-            borderWidth: 1,
-            borderColor: colors.primary,
         },
         listContent: {
             display: 'flex',
@@ -159,9 +157,34 @@ function SeriesManagement({ series, setSeries }: { series: Series[], setSeries: 
     });
 
 
+    function renderItem(info: DragListRenderItemInfo<Series>) {
+        const { item, isActive, onDragEnd, onDragStart } = info;
+
+        return (
+            <Pressable
+                onLongPress={onDragStart}
+                onPressOut={onDragEnd}
+                disabled={isActive}
+            >
+                <SerieComponent serie={item} isActive={isActive} />
+            </Pressable>
+        )
+    
+    }
+
+    async function orReorderItems(fromIndex: number, toIndex: number) {
+        const newItems = [...series];
+        const item = newItems.splice(fromIndex, 1)[0];
+        newItems.splice(toIndex, 0, item);
+        setSeries(newItems);
+    }
+
+    function keyExtractor(props: any) {
+        return props.id
+    }
+
 
     return (
-        <DraxProvider>
             <View>
                 <Text variant="titleMedium">Series de l'exercice</Text>
 
@@ -174,20 +197,17 @@ function SeriesManagement({ series, setSeries }: { series: Series[], setSeries: 
 
                 <View style={styles.listView}>
 
-                    <FlatList
+                    <DragList
                         data={series}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({item, index}) => {
-                            return (
-                                <SerieComponent serie={item} />
-                            )
-                        }}
+                        keyExtractor={keyExtractor}
+                        renderItem={renderItem}
+                        onReordered={orReorderItems}
                     />
+
                     
                 </View>
 
             </View>
-        </DraxProvider>
     )
 }
 
@@ -253,8 +273,6 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
                 }
             />
 
-            {/* <SeriesManagement series={series} setSeries={setSeries} /> */}
-            <TestDrax />
 
             <TextInput
                 label="Notes"
@@ -270,54 +288,5 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
             </StyledButton>
 
         </View>
-    )
-}
-
-function TestDrax() {
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        draggable: {
-            width: 100,
-            height: 100,
-            backgroundColor: 'blue',
-        },
-        receiver: {
-            width: 100,
-            height: 100,
-            backgroundColor: 'green',
-        },
-    });
-
-    return (
-        <DraxProvider>
-            <View style={styles.container}>
-                
-                <DraxView
-                    style={styles.draggable}
-                    onDragStart={() => {
-                        console.log('start drag');
-                    }}
-                    payload="world"
-                />
-
-                <DraxView
-                    style={styles.receiver}
-                    onReceiveDragEnter={({ dragged: { payload } }) => {
-                        console.log(`hello ${payload}`);
-                    }}
-                    onReceiveDragExit={({ dragged: { payload } }) => {
-                        console.log(`goodbye ${payload}`);
-                    }}
-                    onReceiveDragDrop={({ dragged: { payload } }) => {
-                        console.log(`received ${payload}`);
-                    }}
-                />
-
-            </View>
-        </DraxProvider>
     )
 }
