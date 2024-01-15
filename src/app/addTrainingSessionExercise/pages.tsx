@@ -218,9 +218,6 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
     const trainingID = id ? id : route.params.id;
     const [series, setSeries] = useState<Series[]>([
         {completed: false, repsCount: 12, restTime: '2m30', weight: 20, id: 1, positionIndex: 0},
-        {completed: false, repsCount: 12, restTime: '2m30', weight: 20, id: 1, positionIndex: 1},
-        {completed: false, repsCount: 12, restTime: '2m30', weight: 20, id: 1, positionIndex: 2},
-        {completed: false, repsCount: 12, restTime: '2m30', weight: 20, id: 1, positionIndex: 3},
     ]);
 
     const styles = StyleSheet.create({
@@ -244,6 +241,12 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
             console.log(err)
         })
     }, [trainingID])
+
+    const duplicateLastSerie = () => {
+        const lastSerie = series[series.length - 1];
+        const newSerie = {...lastSerie, id: lastSerie.id + 1, positionIndex: lastSerie.positionIndex + 1}
+        setSeries([...series, newSerie])
+    }
 
     return (
         <View style={styles.container}>
@@ -273,6 +276,14 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
                 }
             />
 
+            <SeriesManagement series={series} setSeries={setSeries} />
+
+            <Button
+                onPress={duplicateLastSerie}
+                icon="plus"
+            >
+                Ajouter une série
+            </Button>
 
             <TextInput
                 label="Notes"
