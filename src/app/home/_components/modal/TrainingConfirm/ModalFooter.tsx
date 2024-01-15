@@ -31,7 +31,7 @@ export default function ModalConfirmFooter({activity, dismiss, navigation}: {act
 
     const handleModifyAndValidate = () => {
         dismiss(false);
-        navigation("PerformManuallyTrainingSession")
+        navigation("PerformManuallyTrainingSession", {training: activity})
     }
     
     return (

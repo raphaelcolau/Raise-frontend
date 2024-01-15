@@ -41,8 +41,8 @@ export default function InlineCalendar({navigation, route}: {navigation: any, ro
         },
     });
 
-    const handleNavigate = (route: string) => {
-        navigation.navigate(route);
+    const handleNavigate = (route: string, props: any) => {
+        navigation.navigate(route, props);
     }
 
     return (
