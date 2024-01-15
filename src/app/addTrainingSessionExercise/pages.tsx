@@ -8,6 +8,7 @@ import { Series, TrainingProps } from '../../components/type/types';
 import StyledButton from "../../components/styled/Button";
 import TextInput from "../../components/styled/TextInput";
 import SeriesManagement from './_component/SerieManagement';
+import { addExerciseToTraining } from "../../adapters/training/addExerciceToTraining";
 
 
 
@@ -17,7 +18,7 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
     const [training, setTraining] = useState<TrainingProps | null>(null);
     const trainingID = id ? id : route.params.id;
     const [series, setSeries] = useState<Series[]>([
-        {completed: false, repsCount: 12, restTime: '2:30', weight: 20, id: 1, positionIndex: 0},
+        {completed: false, repsCount: 8, restTime: '1:30', weight: 40, id: 1, positionIndex: 1},
     ]);
     const [note, setNote] = useState<string>('');
 
@@ -47,6 +48,20 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
         const lastSerie = series[series.length - 1];
         const newSerie = {...lastSerie, id: lastSerie.id + 1, positionIndex: lastSerie.positionIndex + 1}
         setSeries([...series, newSerie])
+    }
+
+    const handleCreateExercise = () => {
+        addExerciseToTraining({
+            trainingID: trainingID,
+            exerciceID: 1,
+            notes: note,
+            series: series,
+            numberOfWarmUpSeries: series.length,
+        }).then((res) => {
+            navigation.navigate("Home")
+        }).catch((err) => {
+            console.log(err.response.data)
+        })
     }
 
     return (
@@ -99,6 +114,7 @@ export default function AddTrainingSessionExercise({ navigation, route, id }: { 
                 <StyledButton
                     style={{marginTop: 10}}
                     icon='play'
+                    onPress={handleCreateExercise}
                 >
                     Ajouter l'exercice
                 </StyledButton>
