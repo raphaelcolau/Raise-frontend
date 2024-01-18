@@ -1,48 +1,168 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import HeaderSubPage from '../../components/headerSubPage/HeaderSubPage';
-import { useTheme, Text, Button } from 'react-native-paper';
-import { Training } from '../../components/type/types';
+import { useTheme, Text, Button, Chip, Icon } from 'react-native-paper';
+import { Training, Exercise, EXERCISE_STATUS, Series } from '../../components/type/types';
+import AnimatedProgressWheel from 'react-native-progress-wheel';
+import ExerciseMenu from './_component/ExerciceMenu';
 
-function TrainingButton() {
+interface TrainingButtonProps {
+    currentExercise: Exercise;
+    setCurrentExercise: React.Dispatch<React.SetStateAction<Exercise>>;
+    currentSerie: Series;
+    setCurrentSerie: Function;
+    changeExerciceInTraining: Function;
+}
+
+function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, setCurrentSerie, changeExerciceInTraining }: TrainingButtonProps) {
+        enum BUTTON_STATE {
+        START = 'START',
+        PAUSED = 'PAUSED',
+        COMPLETED = 'COMPLETED',
+        RESTART = 'RESTART',
+    }
     const theme = useTheme();
     const { colors } = theme;
+    const [isDisable, setIsDisable] = useState<boolean>(false);
+    const [buttonState, setButtonState] = useState<BUTTON_STATE>(BUTTON_STATE.PAUSED);
+
+    useEffect(() => {
+        if (currentExercise.exerciseState === EXERCISE_STATUS.NOT_STARTED) {
+            setButtonState(BUTTON_STATE.START);
+        } else if (currentExercise.exerciseState === EXERCISE_STATUS.STARTED) {
+            setButtonState(BUTTON_STATE.PAUSED);
+        } else if (currentExercise.exerciseState === EXERCISE_STATUS.COMPLETED) {
+            setButtonState(BUTTON_STATE.COMPLETED);
+        }
+    }, [currentExercise, currentSerie])
 
     const styles = StyleSheet.create({
         container: {
             width: '100%',
         },
-        button: {
-            width: '100%',
-            height: 70,
-            borderRadius: 15,
-            backgroundColor: colors.primary,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-        }
     });
+
+    const handlePress = () => {
+
+        if (buttonState === BUTTON_STATE.START) {
+            changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.STARTED});
+            setCurrentSerie(currentExercise.series[0]);
+        } else if (buttonState === BUTTON_STATE.PAUSED) {
+            changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.COMPLETED});
+            setCurrentSerie(currentExercise.series[0]);
+        } else if (buttonState === BUTTON_STATE.COMPLETED) {
+            changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.NOT_STARTED});
+            setCurrentSerie(currentExercise.series[0]);
+        }
+    }
+
+    const ButtonSuccess = ({action}: {action: string}) => {
+        const styles = StyleSheet.create({
+            container: {
+                width: '100%',
+                padding: 10,
+                backgroundColor: '#1B9820',
+                borderRadius: 15,
+                height: 63,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+            },
+            action: {
+                borderWidth: 1,
+                borderRadius: 15,
+                borderColor: colors.onSurface,
+                textAlign: 'center',
+                textAlignVertical: 'center',
+                padding: 13,
+                paddingTop: 7,
+            }
+        });
+
+        return (
+            <View
+                style={styles.container}
+            >
+                <Text variant='titleLarge'> Faite votre série </Text>
+                <Text variant='titleLarge' style={styles.action}> {action} </Text>
+            </View>
+        )
+    }
+
+    const ButtonPause = () => {
+        const styles = StyleSheet.create({
+            container: {
+                width: '100%',
+                padding: 10,
+                backgroundColor: colors.primary,
+                borderRadius: 15,
+                height: 63,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 15,
+            },
+            textContainer: {
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 1,
+            },
+        });
+
+        return (
+            <View
+                style={styles.container}
+            >
+                <AnimatedProgressWheel
+                    size={40}
+                    width={25}
+                    color={colors.onSurface}
+                    backgroundColor={colors.primary}
+                    rotation={'-90deg'}
+                    progress={90}
+                />
+
+                <View style={styles.textContainer}>
+                    <Text variant='titleSmall'> Vous êtes en repos </Text>
+                    <Text variant='titleLarge'> Patienter 2 min 12 </Text>
+                </View>
+
+                <View style={{height: '100%'}}>
+                    <Icon source='menu-up' size={30} color={colors.onSurface} />
+                </View>
+
+            </View>
+        )
+    }
 
     return (
         <View style={styles.container}>
-            <Button
-                mode="contained"
-                onPress={() => console.log('Pressed')}
-                textColor='white'
-                style={styles.button}
-            >
-                Patienter 2 min 12
-            </Button>
+           
+           <TouchableOpacity
+                onPress={() => handlePress()}
+                disabled={isDisable}
+           >
+                {buttonState === BUTTON_STATE.START && <ButtonSuccess action='Démarrer' />}
+                {buttonState === BUTTON_STATE.COMPLETED && <ButtonSuccess action="J'ai terminé" />}
+                {buttonState === BUTTON_STATE.PAUSED && <ButtonPause />}
+           </TouchableOpacity>
+
         </View>
     )
 
 }
 
+
+
 export default function PerformTrainingPage({ navigation, route }: { navigation: any, route: any }) {
     const theme = useTheme();
     const { colors } = theme;
-    const training: Training = route.params.training;
-
+    const [training, setTraining] = useState<Training>(route.params.training);
+    const [selectedTraining, setSelectedTraining] = React.useState<number>(0);
+    const [currentExercise, setCurrentExercise] = React.useState<Exercise>(training.trainingExercises[0]);
+    const [currentSerie, setCurrentSerie] = React.useState<Series>(training.trainingExercises[0].series[0]);
     const styles = StyleSheet.create({
         container: {
             position: 'relative',
@@ -58,11 +178,19 @@ export default function PerformTrainingPage({ navigation, route }: { navigation:
             marginTop: 20,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
             flex: 1,
             gap: 13,
         },
     });
+
+    const changeExerciceInTraining = (execiceID: number, props: any) => {
+        const newTraining = {...training};
+        const newExercise = {...newTraining.trainingExercises[execiceID], ...props};
+        console.log(newExercise)
+        newTraining.trainingExercises[execiceID] = newExercise;
+        setTraining(newTraining);
+        setCurrentExercise(newExercise);
+    }
 
     return (
         <View style={styles.container}>
@@ -76,9 +204,25 @@ export default function PerformTrainingPage({ navigation, route }: { navigation:
                     <Text variant='titleSmall'>{training.trainingName}</Text>
                 </View>
 
+                {training.trainingExercises.map((exercise: Exercise) => (
+                    <ExerciseMenu
+                        key={exercise.exerciseId}
+                        isActive={false}
+                        setSelected={setSelectedTraining}
+                        exercise={exercise}
+                        training={training}
+                    />
+                ))}
+
             </View>
 
-            <TrainingButton />
+            <TrainingButton       
+                currentExercise={currentExercise}
+                setCurrentExercise={setCurrentExercise}
+                currentSerie={currentSerie}
+                setCurrentSerie={setCurrentSerie}
+                changeExerciceInTraining={changeExerciceInTraining}
+            />
 
         </View>
     )
