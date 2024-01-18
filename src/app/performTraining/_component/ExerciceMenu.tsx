@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { useTheme, Text, Chip } from 'react-native-paper';
 import { Training, Exercise, EXERCISE_STATUS, Series } from '../../../components/type/types';
 
-export default function ExerciseMenu({ isActive, exercise, setSelected, training }: { isActive: boolean, exercise: Exercise, setSelected: Function, training: Training }) {
+export default function ExerciseMenu({ exercise, setSelected, training }: { exercise: Exercise, setSelected: Function, training: Training }) {
     const theme = useTheme();
     const { colors } = theme;
 
@@ -48,13 +48,13 @@ export default function ExerciseMenu({ isActive, exercise, setSelected, training
                         <Text variant='bodyMedium' style={{marginTop: -12}}>{exercise.series.length} série{exercise.series.length > 1 && 's'}</Text>
                     </View>
 
-                    {exercise.exerciseState === EXERCISE_STATUS.STARTED && 
-                        <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
-                            <Text>Serie</Text>
-                        </View>
-                    }
-
                 </View>
+
+                {exercise.exerciseState === EXERCISE_STATUS.STARTED && 
+                    <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
+                        <Text>Serie</Text>
+                    </View>
+                }
 
             </View>
         </View>

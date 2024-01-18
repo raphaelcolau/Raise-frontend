@@ -5,6 +5,8 @@ import { useTheme, Text, Button, Chip, Icon } from 'react-native-paper';
 import { Training, Exercise, EXERCISE_STATUS, Series } from '../../components/type/types';
 import AnimatedProgressWheel from 'react-native-progress-wheel';
 import ExerciseMenu from './_component/ExerciceMenu';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateTrainings } from '../../store/slice/trainingsSlice';
 
 interface TrainingButtonProps {
     currentExercise: Exercise;
@@ -54,6 +56,7 @@ function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, set
             changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.NOT_STARTED});
             setCurrentSerie(currentExercise.series[0]);
         }
+
     }
 
     const ButtonSuccess = ({action}: {action: string}) => {
@@ -158,11 +161,17 @@ function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, set
 
 export default function PerformTrainingPage({ navigation, route }: { navigation: any, route: any }) {
     const theme = useTheme();
+    const dispatch = useDispatch();
     const { colors } = theme;
-    const [training, setTraining] = useState<Training>(route.params.training);
-    const [selectedTraining, setSelectedTraining] = React.useState<number>(0);
-    const [currentExercise, setCurrentExercise] = React.useState<Exercise>(training.trainingExercises[0]);
-    const [currentSerie, setCurrentSerie] = React.useState<Series>(training.trainingExercises[0].series[0]);
+    const selectedTraining: Training = route.params.training;
+    const [currentExercise, setCurrentExercise] = useState<Exercise>(selectedTraining.trainingExercises[0]);
+    const [currentSerie, setCurrentSerie] = useState<Series>(selectedTraining.trainingExercises[0].series[0]);
+    
+    const currentDay = new Date(useSelector((state: any) => state.currentDay.day));
+    const formatedDate = `${currentDay.getFullYear()}-${String(currentDay.getMonth() + 1).padStart(2, '0')}-${String(currentDay.getDate()).padStart(2, '0')}`;
+    const savedTraining = useSelector((state: any) => state.trainings.saved);
+    const [training, setTraining] = useState<Training>(savedTraining[formatedDate].find((training: Training) => training.trainingId === selectedTraining.trainingId));
+    
     const styles = StyleSheet.create({
         container: {
             position: 'relative',
@@ -182,12 +191,29 @@ export default function PerformTrainingPage({ navigation, route }: { navigation:
             gap: 13,
         },
     });
+    
+    const changeExerciceInTraining = (exerciseID: number, props: any) => {
+        let newTraining = {...training};
+        const currentExercise = newTraining.trainingExercises.find((exercise: Exercise) => exercise.exerciseId === exerciseID);
+        const newExercise = {...currentExercise, ...props};
+        newTraining.trainingExercises = newTraining.trainingExercises.map((exercise: Exercise) => {
+            if (exercise.exerciseId === exerciseID) {
+                return newExercise;
+            }
+            return exercise;
+        });
 
-    const changeExerciceInTraining = (execiceID: number, props: any) => {
-        const newTraining = {...training};
-        const newExercise = {...newTraining.trainingExercises[execiceID], ...props};
-        console.log(newExercise)
-        newTraining.trainingExercises[execiceID] = newExercise;
+        const toSavedTraining = {
+            ...savedTraining,
+            [formatedDate]: savedTraining[formatedDate].map((training: Training) => {
+                if (training.trainingId === newTraining.trainingId) {
+                    return newTraining;
+                }
+                return training;
+            })
+        }
+
+        dispatch(updateTrainings(toSavedTraining));
         setTraining(newTraining);
         setCurrentExercise(newExercise);
     }
@@ -207,8 +233,7 @@ export default function PerformTrainingPage({ navigation, route }: { navigation:
                 {training.trainingExercises.map((exercise: Exercise) => (
                     <ExerciseMenu
                         key={exercise.exerciseId}
-                        isActive={false}
-                        setSelected={setSelectedTraining}
+                        setSelected={setCurrentSerie}
                         exercise={exercise}
                         training={training}
                     />
