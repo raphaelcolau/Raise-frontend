@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import HeaderSubPage from '../../components/headerSubPage/HeaderSubPage';
 import { useTheme, Text, Button } from 'react-native-paper';
+import { Training } from '../../components/type/types';
 
 function TrainingButton() {
     const theme = useTheme();
@@ -40,6 +41,7 @@ function TrainingButton() {
 export default function PerformTrainingPage({ navigation, route }: { navigation: any, route: any }) {
     const theme = useTheme();
     const { colors } = theme;
+    const training: Training = route.params.training;
 
     const styles = StyleSheet.create({
         container: {
@@ -52,13 +54,32 @@ export default function PerformTrainingPage({ navigation, route }: { navigation:
             flexDirection: 'column',
             justifyContent: 'space-between',
         },
+        content: {
+            marginTop: 20,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            flex: 1,
+            gap: 13,
+        },
     });
 
     return (
         <View style={styles.container}>
+
             <HeaderSubPage navigation={navigation} route={route} />
-            <Text>PerformTrainingPage</Text>
+
+            <View style={styles.content}>
+                
+                <View>
+                    <Text variant='headlineMedium'>Séance de sport</Text>
+                    <Text variant='titleSmall'>{training.trainingName}</Text>
+                </View>
+
+            </View>
+
             <TrainingButton />
+
         </View>
     )
 }
