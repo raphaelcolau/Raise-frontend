@@ -15,7 +15,6 @@ function ExerciseMenu({isActive, exercise, setSelected, training}: {isActive: bo
     const currentDay = new Date(useSelector((state: any) => state.currentDay.day));
     const formattedDate = `${currentDay.getFullYear()}-${String(currentDay.getMonth() + 1).padStart(2, '0')}-${String(currentDay.getDate()).padStart(2, '0')}`;
 
-    // console.log(savedTraining[formattedDate])
 
     const styles = StyleSheet.create({
         container: {
