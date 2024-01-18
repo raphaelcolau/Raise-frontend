@@ -9,6 +9,7 @@ import { CreateTrainingPage } from './app/home/createTraining/pages';
 import ResetPwd from './app/resetpassword/Resetpwd';
 import AddTrainingSessionExercise from './app/addTrainingSessionExercise/pages';
 import PerformManuallyTrainingSession from './app/performManuallyTrainingSession/pages';
+import PerformTrainingPage from './app/performTraining/pages';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,7 @@ export default function Router() {
                 <Stack.Screen name="ResetPwd" component={ResetPwd} />
                 <Stack.Screen name="AddTrainingSessionExercise" component={AddTrainingSessionExercise} />
                 <Stack.Screen name="PerformManuallyTrainingSession" component={PerformManuallyTrainingSession} />
+                <Stack.Screen name="PerformTraining" component={PerformTrainingPage} />
             </Stack.Navigator>
         </NavigationContainer>
     );

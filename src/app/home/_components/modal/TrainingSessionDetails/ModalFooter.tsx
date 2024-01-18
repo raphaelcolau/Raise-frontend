@@ -6,7 +6,7 @@ import { cancelTrainingSessionDay } from '../../../../../adapters/training/cance
 import { TRAINING_STATUS, Training } from '../../../../../components/type/types';
 import { useSelector } from 'react-redux';
 
-export default function ModalFooter({dismiss, toOpen, activity}: {dismiss: Function, toOpen: Function, activity: Training}) {
+export default function ModalFooter({dismiss, toOpen, activity, navigation}: {dismiss: Function, toOpen: Function, activity: Training, navigation: Function}) {
     const theme = useTheme();
     const currentDay = useSelector((state: any) => state.currentDay.day);
     const currentDayDate = new Date(currentDay);
@@ -34,6 +34,11 @@ export default function ModalFooter({dismiss, toOpen, activity}: {dismiss: Funct
         dismiss(false);
     }
 
+    const hanldleResume = () => {
+        dismiss(false);
+        navigation('PerformTraining', {training: activity});
+    }
+
     return (
         <View style={modalStyles.ModalFooter}>
 
@@ -57,7 +62,11 @@ export default function ModalFooter({dismiss, toOpen, activity}: {dismiss: Funct
                 Valider
             </Button>
 
-            <MainButton>Reprendre</MainButton>
+            <MainButton
+                onPress={() => hanldleResume()}
+            >
+                Reprendre
+            </MainButton>
         </View>
     )
 }

@@ -65,7 +65,7 @@ export default function Activity({activity, navigation}: {activity: Training, na
                 <Surface elevation={0} style={modalStyles.Modal}>
                     <ModalHeader activity={activity} setIsVisible={setIsVisibleDetails}/>
                     <ModalContent activity={activity} />
-                    <ModalFooter dismiss={setIsVisibleDetails} toOpen={setIsVisibleConfirm} activity={activity} />
+                    <ModalFooter dismiss={setIsVisibleDetails} toOpen={setIsVisibleConfirm} activity={activity} navigation={navigation} />
                 </Surface>
             </Modal>
         </Portal>
