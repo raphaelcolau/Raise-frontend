@@ -233,9 +233,8 @@ export default function PerformTrainingPage({ navigation, route }: { navigation:
                 {training.trainingExercises.map((exercise: Exercise) => (
                     <ExerciseMenu
                         key={exercise.exerciseId}
-                        setSelected={setCurrentSerie}
+                        currentSerieID={currentSerie.id}
                         exercise={exercise}
-                        training={training}
                     />
                 ))}
 

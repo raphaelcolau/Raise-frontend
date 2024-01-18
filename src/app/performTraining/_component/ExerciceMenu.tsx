@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { useTheme, Text, Chip } from 'react-native-paper';
 import { Training, Exercise, EXERCISE_STATUS, Series } from '../../../components/type/types';
 
-export default function ExerciseMenu({ exercise, setSelected, training }: { exercise: Exercise, setSelected: Function, training: Training }) {
+export default function ExerciseMenu({ exercise, currentSerieID }: { exercise: Exercise, currentSerieID: number }) {
     const theme = useTheme();
     const { colors } = theme;
 
@@ -51,9 +51,46 @@ export default function ExerciseMenu({ exercise, setSelected, training }: { exer
                 </View>
 
                 {exercise.exerciseState === EXERCISE_STATUS.STARTED && 
-                    <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
-                        <Text>Serie</Text>
-                    </View>
+                    <View style={{display: 'flex', flexDirection: 'column', gap: 20}}>
+                        <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <Text variant='bodyLarge' style={{flex: 1, textAlign: 'center'}}> </Text>
+                            <Text variant='bodyLarge' style={{flex: 1, textAlign: 'center'}}>Reps</Text>
+                            <Text variant='bodyLarge' style={{flex: 1, textAlign: 'center'}}>Charge</Text>
+                            <Text variant='bodyLarge' style={{flex: 1, textAlign: 'center'}}>Repo</Text>
+                        </View>
+
+                        {exercise.series.map((serie) => {
+                            const color = serie.id === currentSerieID ? colors.primary : colors.onSurface;
+
+                            return (
+                                <View key={serie.id} style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+
+                                    {serie.id === currentSerieID &&
+                    
+                                        <View style={{
+                                            width: 20,
+                                            height: 14,
+                                            backgroundColor: color,
+                                            borderRadius: 2,
+                                            borderTopRightRadius: 10,
+                                            borderBottomRightRadius: 10,
+                                            position: 'absolute',
+                                            left: -20,
+                                            top: 7,
+                                        
+                                        }} />    
+                                    }
+                                    
+                                
+                                    <Text variant='bodyLarge' style={{flex: 1, textAlign: 'center', color: color}}> ● Série {serie.id < 10 ? `0${serie.id}` : serie.id}</Text>
+                                    <Text variant='bodyLarge' style={{flex: 1, textAlign: 'center', color: color}}>{serie.repsCount}</Text>
+                                    <Text variant='bodyLarge' style={{flex: 1, textAlign: 'center', color: color}}>{serie.weight} kg</Text>
+                                    <Text variant='bodyLarge' style={{flex: 1, textAlign: 'center', color: color}}>{serie.restTime}</Text>
+                                </View>
+                            )
+                        })}
+                    
+                </View>
                 }
 
             </View>
