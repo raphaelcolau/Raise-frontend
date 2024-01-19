@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import HeaderSubPage from '../../components/headerSubPage/HeaderSubPage';
 import { useTheme, Text, Button, Chip, Icon } from 'react-native-paper';
@@ -16,27 +16,47 @@ interface TrainingButtonProps {
     changeExerciceInTraining: Function;
 }
 
+enum BUTTON_STATE {
+    START = 'START',
+    PAUSED = 'PAUSED',
+    COMPLETED = 'COMPLETED',
+    RESTART = 'RESTART',
+}
+
 function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, setCurrentSerie, changeExerciceInTraining }: TrainingButtonProps) {
-        enum BUTTON_STATE {
-        START = 'START',
-        PAUSED = 'PAUSED',
-        COMPLETED = 'COMPLETED',
-        RESTART = 'RESTART',
-    }
     const theme = useTheme();
     const { colors } = theme;
     const [isDisable, setIsDisable] = useState<boolean>(false);
     const [buttonState, setButtonState] = useState<BUTTON_STATE>(BUTTON_STATE.PAUSED);
+    const [timer, setTimer] = useState<number>(0);
 
     useEffect(() => {
-        if (currentExercise.exerciseState === EXERCISE_STATUS.NOT_STARTED) {
-            setButtonState(BUTTON_STATE.START);
-        } else if (currentExercise.exerciseState === EXERCISE_STATUS.STARTED) {
+        if (timer > 0) {
             setButtonState(BUTTON_STATE.PAUSED);
-        } else if (currentExercise.exerciseState === EXERCISE_STATUS.COMPLETED) {
+        } else if (currentExercise.exerciseState === EXERCISE_STATUS.STARTED) {
             setButtonState(BUTTON_STATE.COMPLETED);
+        } else if (currentExercise.exerciseState === EXERCISE_STATUS.NOT_STARTED) {
+            setButtonState(BUTTON_STATE.START);
         }
     }, [currentExercise, currentSerie])
+
+
+    useEffect(() => {
+        let interval: any = useRef(null); // Add useRef hook
+
+        if (timer > 0 && !interval.current) { // Check if interval doesn't exist
+            interval.current = setInterval(() => {
+                setTimer(prevTimer => prevTimer - 1);
+            }, 1000);
+        }
+
+        return () => {
+            if (interval.current) {
+                clearInterval(interval.current);
+                interval.current = null; // Reset interval on cleanup
+            }
+        };
+    }, [timer]);
 
     const styles = StyleSheet.create({
         container: {
@@ -47,14 +67,27 @@ function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, set
     const handlePress = () => {
 
         if (buttonState === BUTTON_STATE.START) {
+
             changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.STARTED});
             setCurrentSerie(currentExercise.series[0]);
+            
         } else if (buttonState === BUTTON_STATE.PAUSED) {
+
             changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.COMPLETED});
             setCurrentSerie(currentExercise.series[0]);
+
         } else if (buttonState === BUTTON_STATE.COMPLETED) {
-            changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.NOT_STARTED});
-            setCurrentSerie(currentExercise.series[0]);
+            const nextSerie = currentExercise.series.find((serie: Series) => serie.id === currentSerie.id + 1);
+            if (nextSerie) {
+                const [minutes, seconds] = nextSerie.restTime.split(':');
+                setTimer(Number(minutes) * 60 + Number(seconds));
+                setCurrentSerie(nextSerie);
+                changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.STARTED});
+            } else {
+                changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.COMPLETED});
+                setCurrentSerie(currentExercise.series[0]);
+            }
+
         }
 
     }
