@@ -29,40 +29,32 @@ function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, set
     const [isDisable, setIsDisable] = useState<boolean>(false);
     const [buttonState, setButtonState] = useState<BUTTON_STATE>(BUTTON_STATE.PAUSED);
     const [timer, setTimer] = useState<number>(0);
+    const [originalTimer, setOriginalTimer] = useState<number>(0);
 
     useEffect(() => {
         if (timer > 0) {
             setButtonState(BUTTON_STATE.PAUSED);
-        } else if (currentExercise.exerciseState === EXERCISE_STATUS.STARTED) {
+        } else if (currentExercise.exerciseState === EXERCISE_STATUS.STARTED && timer === 0) {
             setButtonState(BUTTON_STATE.COMPLETED);
         } else if (currentExercise.exerciseState === EXERCISE_STATUS.NOT_STARTED) {
             setButtonState(BUTTON_STATE.START);
         }
-    }, [currentExercise, currentSerie])
-
-
-    useEffect(() => {
-        let interval: any = useRef(null); // Add useRef hook
-
-        if (timer > 0 && !interval.current) { // Check if interval doesn't exist
-            interval.current = setInterval(() => {
-                setTimer(prevTimer => prevTimer - 1);
-            }, 1000);
-        }
-
-        return () => {
-            if (interval.current) {
-                clearInterval(interval.current);
-                interval.current = null; // Reset interval on cleanup
-            }
-        };
-    }, [timer]);
+    }, [currentExercise, currentSerie, timer])
 
     const styles = StyleSheet.create({
         container: {
             width: '100%',
         },
     });
+
+    useEffect(() => {
+        if (timer > 0) {
+            const interval = setInterval(() => {
+                setTimer(timer - 1);
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [timer]);
 
     const handlePress = () => {
 
@@ -81,6 +73,7 @@ function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, set
             if (nextSerie) {
                 const [minutes, seconds] = nextSerie.restTime.split(':');
                 setTimer(Number(minutes) * 60 + Number(seconds));
+                setOriginalTimer(Number(minutes) * 60 + Number(seconds));
                 setCurrentSerie(nextSerie);
                 changeExerciceInTraining(currentExercise.exerciseId, {exerciseState: EXERCISE_STATUS.STARTED});
             } else {
@@ -157,12 +150,13 @@ function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, set
                     color={colors.onSurface}
                     backgroundColor={colors.primary}
                     rotation={'-90deg'}
-                    progress={90}
+                    progress={ 100 - (timer / originalTimer * 100) }
+                    animateFromValue={99 - (timer / originalTimer * 100)}
                 />
 
                 <View style={styles.textContainer}>
                     <Text variant='titleSmall'> Vous êtes en repos </Text>
-                    <Text variant='titleLarge'> Patienter 2 min 12 </Text>
+                    <Text variant='titleLarge'> Patienter {Math.floor(timer / 60) > 0 ? `${Math.floor(timer / 60)}m` : ''} {Math.floor(timer % 60)} s </Text>
                 </View>
 
                 <View style={{height: '100%'}}>
