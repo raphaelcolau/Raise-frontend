@@ -140,6 +140,9 @@ function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, set
             },
         });
 
+        console.log(100 - (timer / originalTimer * 100));
+        console.log(99 - (timer / originalTimer * 100));
+
         return (
             <View
                 style={styles.container}
@@ -150,8 +153,8 @@ function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, set
                     color={colors.onSurface}
                     backgroundColor={colors.primary}
                     rotation={'-90deg'}
-                    progress={ 100 - (timer / originalTimer * 100) }
-                    animateFromValue={99 - (timer / originalTimer * 100)}
+                    progress={ originalTimer !== 0 ? (100 - (timer / originalTimer * 100)) : 0 }
+                    animateFromValue={ originalTimer !== 0 ?  (99 - (timer / originalTimer * 100)) : 0}
                 />
 
                 <View style={styles.textContainer}>
