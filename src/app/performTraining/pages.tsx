@@ -7,6 +7,7 @@ import AnimatedProgressWheel from 'react-native-progress-wheel';
 import ExerciseMenu from './_component/ExerciceMenu';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTrainings } from '../../store/slice/trainingsSlice';
+import { modifyAndValidate } from '../../adapters/training/modifyAndValidate';
 
 interface TrainingButtonProps {
     currentExercise: Exercise;
@@ -230,6 +231,7 @@ export default function PerformTrainingPage({ navigation, route }: { navigation:
             return exercise;
         });
 
+        
         const toSavedTraining = {
             ...savedTraining,
             [formatedDate]: savedTraining[formatedDate].map((training: Training) => {
@@ -240,6 +242,10 @@ export default function PerformTrainingPage({ navigation, route }: { navigation:
             })
         }
 
+
+        modifyAndValidate(toSavedTraining[formatedDate]);
+
+        
         dispatch(updateTrainings(toSavedTraining));
         setTraining(newTraining);
         setCurrentExercise(newExercise);
