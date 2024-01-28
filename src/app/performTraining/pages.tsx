@@ -140,9 +140,6 @@ function TrainingButton({ currentExercise, setCurrentExercise, currentSerie, set
             },
         });
 
-        console.log(100 - (timer / originalTimer * 100));
-        console.log(99 - (timer / originalTimer * 100));
-
         return (
             <View
                 style={styles.container}
