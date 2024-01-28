@@ -9,6 +9,7 @@ export async function getUserTrainings(selectedDay: Date) {
         const trainings: Array<Training> = data.data;
 
         if (data.success) {
+            console.log(data.data)
             return data.data;
         } else {
             return [];

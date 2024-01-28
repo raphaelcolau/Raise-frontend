@@ -7,7 +7,9 @@ export const modifyAndValidate = async (props: Training[]) => {
     try {
         const storedDate = store.getState().currentDay.day;
         const FormatDate = new Date(storedDate).toISOString();
-      
+        console.log("-------------------")
+        console.log(props[0])
+        console.log("-------------------")
       
         const response = await axios.post(`${API_URL}/api/training/${props[0].trainingId}/modify-and-validate/${FormatDate}`, {
           "trainingSession": props
